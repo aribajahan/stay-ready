@@ -4,6 +4,7 @@ import { ImmigrationStatus } from '@/types/card';
 interface StatusSelectorProps {
   value: ImmigrationStatus;
   onChange: (status: ImmigrationStatus) => void;
+  onSelect?: () => void;
 }
 
 const statusOptions: { key: Exclude<ImmigrationStatus, null>; translationKey: string }[] = [
@@ -16,8 +17,16 @@ const statusOptions: { key: Exclude<ImmigrationStatus, null>; translationKey: st
   { key: 'preferNot', translationKey: 'preferNotToSay' },
 ];
 
-export function StatusSelector({ value, onChange }: StatusSelectorProps) {
+export function StatusSelector({ value, onChange, onSelect }: StatusSelectorProps) {
   const { t } = useLanguage();
+
+  const handleSelect = (status: ImmigrationStatus) => {
+    onChange(status);
+    // Auto-advance after a brief moment
+    setTimeout(() => {
+      onSelect?.();
+    }, 150);
+  };
 
   return (
     <div className="w-full max-w-sm mx-auto">
@@ -31,7 +40,7 @@ export function StatusSelector({ value, onChange }: StatusSelectorProps) {
         {statusOptions.map((option) => (
           <button
             key={option.key}
-            onClick={() => onChange(option.key)}
+            onClick={() => handleSelect(option.key)}
             className={`
               w-full p-4 text-left text-base font-medium rounded-2xl transition-all duration-200
               ${value === option.key 

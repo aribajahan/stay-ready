@@ -1,14 +1,16 @@
 import { forwardRef } from 'react';
-import { ImmigrationStatus, EmergencyContact, statusGuidance } from '@/types/card';
+import { ImmigrationStatus, EmergencyContact, DocumentInfo, statusGuidance, documentLabels } from '@/types/card';
 
 interface RightsCardProps {
   status: ImmigrationStatus;
+  documentInfo: DocumentInfo;
   contacts: EmergencyContact[];
 }
 
 export const RightsCard = forwardRef<HTMLDivElement, RightsCardProps>(
-  ({ status, contacts }, ref) => {
+  ({ status, documentInfo, contacts }, ref) => {
     const showGuidance = status && status !== 'preferNot' && statusGuidance[status];
+    const showDocument = documentInfo.type && documentLabels[documentInfo.type];
 
     return (
       <div
@@ -82,6 +84,22 @@ export const RightsCard = forwardRef<HTMLDivElement, RightsCardProps>(
           >
             <p className="text-sm" style={{ color: '#1A2B3C' }}>
               {statusGuidance[status]}
+            </p>
+          </div>
+        )}
+
+        {/* Document info */}
+        {showDocument && (
+          <div className="mb-6">
+            <p 
+              className="text-xs font-medium uppercase tracking-wider mb-2"
+              style={{ color: '#1A2B3C', opacity: 0.5 }}
+            >
+              My ID Document
+            </p>
+            <p className="text-sm" style={{ fontWeight: 500 }}>
+              {documentLabels[documentInfo.type!]}
+              {documentInfo.number && `: ${documentInfo.number}`}
             </p>
           </div>
         )}
