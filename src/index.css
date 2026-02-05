@@ -2,95 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Know Your Rights - Bold, High-Contrast Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
+    /* Core palette */
+    --hot-pink: 338 100% 50%;
+    --electric-blue: 227 100% 50%;
+    --pure-black: 0 0% 0%;
+    --pure-white: 0 0% 100%;
+    
+    /* Semantic tokens - Light mode (inverted for impact) */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 0%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 338 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 227 100% 50%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 227 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 338 100% 50%;
 
     --radius: 0.5rem;
 
+    /* Typography */
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Shadows */
+    --shadow-bold: 8px 8px 0px hsl(var(--pure-black));
+    --shadow-pink: 8px 8px 0px hsl(var(--hot-pink));
+    --shadow-blue: 8px 8px 0px hsl(var(--electric-blue));
+
     --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
+    --sidebar-foreground: 0 0% 26%;
+    --sidebar-primary: 0 0% 10%;
     --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 91%;
+    --sidebar-ring: 338 100% 50%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 338 100% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 227 100% 50%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 227 100% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 338 100% 50%;
+
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 338 100% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 338 100% 50%;
   }
 }
 
@@ -99,7 +109,180 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    font-family: var(--font-body);
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  /* Bold button with offset shadow */
+  .btn-bold {
+    @apply relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold uppercase tracking-wide transition-all duration-150;
+    font-family: var(--font-display);
+  }
+
+  .btn-bold:hover {
+    transform: translate(2px, 2px);
+  }
+
+  .btn-bold:active {
+    transform: translate(4px, 4px);
+  }
+
+  .btn-primary {
+    @apply btn-bold bg-primary text-primary-foreground;
+    box-shadow: var(--shadow-bold);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 6px 6px 0px hsl(var(--pure-black));
+  }
+
+  .btn-primary:active {
+    box-shadow: 4px 4px 0px hsl(var(--pure-black));
+  }
+
+  .btn-secondary {
+    @apply btn-bold bg-secondary text-secondary-foreground;
+    box-shadow: var(--shadow-bold);
+  }
+
+  .btn-secondary:hover {
+    box-shadow: 6px 6px 0px hsl(var(--pure-black));
+  }
+
+  .btn-outline {
+    @apply btn-bold bg-transparent border-4 border-foreground text-foreground;
+    box-shadow: var(--shadow-bold);
+  }
+
+  .btn-outline:hover {
+    @apply bg-foreground text-background;
+  }
+
+  /* Card with bold border */
+  .card-bold {
+    @apply bg-card border-4 border-foreground p-6;
+    box-shadow: var(--shadow-bold);
+  }
+
+  /* Section divider */
+  .divider-bold {
+    @apply h-1 bg-foreground w-full;
+  }
+
+  /* Geometric accent shapes */
+  .accent-block {
+    @apply absolute w-16 h-16 bg-primary;
+  }
+
+  .accent-circle {
+    @apply absolute w-16 h-16 rounded-full bg-secondary;
+  }
+
+  /* Rights card specific styles */
+  .rights-card {
+    @apply bg-pure-white text-pure-black p-8;
+    font-family: var(--font-display);
+    width: 1080px;
+    min-height: 1920px;
+  }
+
+  /* Info page content */
+  .info-content {
+    @apply prose prose-lg max-w-none;
+  }
+
+  .info-content h2 {
+    @apply text-3xl mb-4 text-foreground;
+    font-family: var(--font-display);
+  }
+
+  .info-content p {
+    @apply text-lg leading-relaxed mb-4 text-foreground;
+  }
+
+  .info-content ul {
+    @apply space-y-2 mb-6;
+  }
+
+  .info-content li {
+    @apply text-lg flex items-start gap-3;
+  }
+
+  .info-content li::before {
+    content: "•";
+    @apply text-primary font-bold text-2xl leading-none mt-1;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .text-hot-pink {
+    color: hsl(var(--hot-pink));
+  }
+
+  .text-electric-blue {
+    color: hsl(var(--electric-blue));
+  }
+
+  .bg-hot-pink {
+    background-color: hsl(var(--hot-pink));
+  }
+
+  .bg-electric-blue {
+    background-color: hsl(var(--electric-blue));
+  }
+
+  .bg-pure-black {
+    background-color: hsl(var(--pure-black));
+  }
+
+  .bg-pure-white {
+    background-color: hsl(var(--pure-white));
+  }
+
+  .text-pure-black {
+    color: hsl(var(--pure-black));
+  }
+
+  .text-pure-white {
+    color: hsl(var(--pure-white));
+  }
+
+  .border-hot-pink {
+    border-color: hsl(var(--hot-pink));
+  }
+
+  .border-electric-blue {
+    border-color: hsl(var(--electric-blue));
+  }
+
+  .shadow-bold {
+    box-shadow: var(--shadow-bold);
+  }
+
+  .shadow-pink {
+    box-shadow: var(--shadow-pink);
+  }
+
+  .shadow-blue {
+    box-shadow: var(--shadow-blue);
   }
 }
