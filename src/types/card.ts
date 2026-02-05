@@ -8,6 +8,20 @@ export type ImmigrationStatus =
   | 'preferNot'
   | null;
 
+export type DocumentType = 
+  | 'passport'
+  | 'driversLicense'
+  | 'stateId'
+  | 'workPermit'
+  | 'greenCard'
+  | 'other'
+  | null;
+
+export interface DocumentInfo {
+  type: DocumentType;
+  number: string;
+}
+
 export interface EmergencyContact {
   id: string;
   name: string;
@@ -16,6 +30,7 @@ export interface EmergencyContact {
 
 export interface CardData {
   status: ImmigrationStatus;
+  document: DocumentInfo;
   contacts: EmergencyContact[];
 }
 
@@ -37,4 +52,13 @@ export const statusGuidance: Record<Exclude<ImmigrationStatus, null>, string> = 
   asylum: 'Carry proof of pending case. Contact your attorney immediately if detained.',
   undocumented: 'You still have constitutional rights. Stay calm and exercise them.',
   preferNot: '',
+};
+
+export const documentLabels: Record<Exclude<DocumentType, null>, string> = {
+  passport: 'Passport',
+  driversLicense: "Driver's License",
+  stateId: 'State ID',
+  workPermit: 'Work Permit (EAD)',
+  greenCard: 'Green Card',
+  other: 'Other',
 };

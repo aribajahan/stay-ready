@@ -4,14 +4,15 @@ import { toPng } from 'html-to-image';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
 import { StatusSelector } from '@/components/StatusSelector';
+import { DocumentForm } from '@/components/DocumentForm';
 import { EmergencyContactForm } from '@/components/EmergencyContactForm';
 import { RightsPreview } from '@/components/RightsPreview';
 import { RightsCard } from '@/components/RightsCard';
-import { ImmigrationStatus, EmergencyContact } from '@/types/card';
+import { ImmigrationStatus, EmergencyContact, DocumentInfo } from '@/types/card';
 import { ArrowLeft, Download, Share2, RotateCcw } from 'lucide-react';
 import { toast } from 'sonner';
 
-type Step = 'language' | 'status' | 'contacts' | 'preview' | 'card';
+type Step = 'language' | 'status' | 'documents' | 'contacts' | 'preview' | 'card';
 
 export default function PrepareCard() {
   const navigate = useNavigate();
@@ -20,10 +21,11 @@ export default function PrepareCard() {
 
   const [step, setStep] = useState<Step>('language');
   const [status, setStatus] = useState<ImmigrationStatus>(null);
+  const [documentInfo, setDocumentInfo] = useState<DocumentInfo>({ type: null, number: '' });
   const [contacts, setContacts] = useState<EmergencyContact[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const steps: Step[] = ['language', 'status', 'contacts', 'preview', 'card'];
+  const steps: Step[] = ['language', 'status', 'documents', 'contacts', 'preview', 'card'];
   const currentStepIndex = steps.indexOf(step);
 
   const goNext = () => {
@@ -107,6 +109,7 @@ export default function PrepareCard() {
   const startOver = () => {
     setStep('language');
     setStatus(null);
+    setDocumentInfo({ type: null, number: '' });
     setContacts([]);
   };
 
@@ -115,7 +118,9 @@ export default function PrepareCard() {
       case 'language':
         return <LanguageSelector onSelect={() => goNext()} />;
       case 'status':
-        return <StatusSelector value={status} onChange={setStatus} />;
+        return <StatusSelector value={status} onChange={setStatus} onSelect={() => goNext()} />;
+      case 'documents':
+        return <DocumentForm value={documentInfo} onChange={setDocumentInfo} />;
       case 'contacts':
         return <EmergencyContactForm contacts={contacts} onChange={setContacts} />;
       case 'preview':
@@ -125,7 +130,7 @@ export default function PrepareCard() {
           <div className="flex flex-col items-center">
             <div className="w-full max-w-xs overflow-hidden rounded-2xl shadow-card-hover">
               <div className="transform scale-[0.5] origin-top-left w-[200%]">
-                <RightsCard ref={cardRef} status={status} contacts={contacts} />
+                <RightsCard ref={cardRef} status={status} documentInfo={documentInfo} contacts={contacts} />
               </div>
             </div>
           </div>
@@ -164,8 +169,9 @@ export default function PrepareCard() {
       );
     }
 
-    const showSkip = step === 'status' || step === 'contacts';
-    const showNext = step !== 'language' && step !== 'preview';
+    // Show skip for documents and contacts, show next for documents
+    const showSkip = step === 'documents' || step === 'contacts';
+    const showNext = step === 'documents' || step === 'contacts';
     const showGenerate = step === 'preview';
 
     return (
