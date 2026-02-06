@@ -1,62 +1,75 @@
 
+# Fix Review Rights Flow, Enlarge Card Icons & Add Hero Image
 
-# Icon Color Reversal & Layout Adjustment
+## Summary of Issues and Changes
 
-Updating the rights card to match the reference style: cream icon backgrounds with dark icons, and a single-line headline.
+### Issue 1: Broken "Review Your Rights" Navigation
+The home page links to `/review` but the route is registered as `/rights`, causing users to hit a 404.
 
----
+### Issue 2: Card Icons Too Small
+The SVG icons are currently 40x40 viewBox displayed in 88x88 boxes - they should be larger to fill the space better.
 
-## Visual Changes
-
-| Element | Current | New |
-|---------|---------|-----|
-| Icon box background | Black `#1A1A1A` | Cream `#F5F2E8` |
-| Icon strokes | White | Black `#1A1A1A` |
-| Icon accents | Brick Red `#B8352E` | Brick Red `#B8352E` (keep) |
-| Icon box border | None | 3px solid `#1A1A1A` |
-| "MY RIGHTS" | 96px, two lines | 72px, single line |
-| Rights strip height | 72px | 88px |
-| Rights strip text | 22px | 26px |
-
----
-
-## Reference Alignment
-
-The reference image shows:
-- Light/cream icon backgrounds with dark silhouettes
-- Bold, high-contrast black icons
-- Single-line "MY RIGHTS" headline
-- Larger rights strips with prominent text
+### Issue 3: Home Page Hero Image
+Add the uploaded fist/gavel illustration as a subtle background behind the "Know Your Rights" headline.
 
 ---
 
 ## Technical Changes
 
+### File: `src/pages/Index.tsx`
+
+**Fix navigation link (line 38)**
+- Change `to="/review"` to `to="/rights"` to match the actual route
+
+**Add hero image behind headline**
+- Copy the uploaded image to `src/assets/hero-fist.png`
+- Import the image at top of file
+- Wrap the headline section in a container with the image as a background
+- Apply reduced opacity (~20-30%) so text remains readable
+- Keep the cream background showing through
+
 ### File: `src/components/RightsCard.tsx`
 
-**Update all icon SVGs (lines 23-79)**
-- Change all `stroke="white"` to `stroke="#1A1A1A"`
-- Change all `fill="white"` to `fill="#1A1A1A"`
-- Keep brick red `#B8352E` accents as-is
+**Enlarge icon SVGs (lines 23-73)**
+- Increase viewBox from 40x40 to 56x56 for all four icons
+- Scale up internal SVG elements proportionally (multiply coordinates by 1.4)
+- Increase width/height attributes from 40 to 56
+- This makes icons fill ~64% of the 88px box vs current ~45%
 
-**Update "MY RIGHTS" headline (lines 154-165)**
-- Reduce fontSize from `96px` to `72px`
-- Remove the `<br />` to make it single line
-- Adjust marginBottom to `16px`
+---
 
-**Update icon box styling (lines 180-189)**
-- Change backgroundColor from `#1A1A1A` to `#F5F2E8`
-- Add border: `3px solid #1A1A1A`
-- Add borderRadius for left corners: `12px 0 0 12px`
+## Icon Scaling Details
 
-**Update rights strip dimensions (lines 172-177)**
-- Increase height from `72px` to `88px`
+| Icon | Current Size | New Size | Change |
+|------|--------------|----------|--------|
+| DoorIcon | 40x40 | 56x56 | +40% |
+| SilenceIcon | 40x40 | 56x56 | +40% |
+| HandIcon | 40x40 | 56x56 | +40% |
+| PhoneIcon | 40x40 | 56x56 | +40% |
 
-**Update icon box dimensions (lines 181-182)**
-- Increase width/height from `72px` to `88px`
+---
 
-**Update rights strip text (line 209)**
-- Increase fontSize from `22px` to `26px`
+## Home Page Layout with Hero Image
+
+```text
++----------------------------------+
+|                                  |
+|   [Hero image @ 20% opacity]     |
+|                                  |
+|      KNOW YOUR RIGHTS            |
+|   Be prepared. Stay calm...      |
+|                                  |
++----------------------------------+
+|   [Prepare My Card button]       |
+|   [Review My Rights button]      |
+|   [Hotline box]                  |
++----------------------------------+
+```
+
+The image will be positioned absolutely behind the headline with:
+- `opacity: 0.15` to `0.25` for subtlety
+- Contained sizing so it doesn't overflow
+- Centered positioning
 
 ---
 
@@ -64,5 +77,15 @@ The reference image shows:
 
 | File | Changes |
 |------|---------|
-| `src/components/RightsCard.tsx` | Reverse icon colors, resize headline, enlarge rights strips |
+| `src/pages/Index.tsx` | Fix link from `/review` to `/rights`, add hero image background |
+| `src/components/RightsCard.tsx` | Scale up all 4 icon SVGs from 40x40 to 56x56 |
+| `src/assets/hero-fist.png` | Copy uploaded image here (new file) |
 
+---
+
+## Steps
+
+1. Copy uploaded image to `src/assets/hero-fist.png`
+2. Fix the navigation link in Index.tsx from `/review` to `/rights`
+3. Add the hero image as a background behind the headline section
+4. Scale up all four SVG icons in RightsCard.tsx
