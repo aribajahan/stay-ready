@@ -56,8 +56,8 @@ export default function Index() {
           <div className="bg-card rounded-2xl p-4 shadow-card mb-8">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-coral/10 flex items-center justify-center">
-                  <Phone size={20} className="text-coral" />
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Phone size={20} className="text-primary" />
                 </div>
                 <div className="text-left">
                   <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">

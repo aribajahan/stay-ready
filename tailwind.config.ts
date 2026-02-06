@@ -24,7 +24,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         headline: "hsl(var(--headline))",
-        coral: "hsl(var(--coral))",
+        
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -78,7 +78,7 @@ export default {
       boxShadow: {
         card: "0 2px 8px rgba(0, 0, 0, 0.06)",
         "card-hover": "0 4px 16px rgba(0, 0, 0, 0.1)",
-        button: "0 2px 8px rgba(5, 150, 105, 0.25)",
+        button: "0 2px 8px rgba(184, 53, 46, 0.25)",
       },
       keyframes: {
         "accordion-down": {

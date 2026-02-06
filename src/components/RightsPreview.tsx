@@ -44,7 +44,7 @@ export function RightsPreview() {
             <p className="text-sm text-muted-foreground mb-3">
               {right.description}
             </p>
-            <p className="text-sm italic text-foreground bg-secondary/5 p-3 rounded-xl">
+            <p className="text-sm italic text-foreground bg-accent p-3 rounded-xl">
               {right.quote}
             </p>
           </div>
