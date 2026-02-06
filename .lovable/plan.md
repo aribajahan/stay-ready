@@ -1,28 +1,32 @@
 
 
-# Icon Redesign: Bold Graphic Style with Human Figures
+# Icon Color Reversal & Layout Adjustment
 
-Redesign the four rights card icons to be more illustrative with human figures, thicker strokes, and brick red accent details.
-
----
-
-## New Icon Designs
-
-| Icon | Current | New Design |
-|------|---------|------------|
-| No Warrant, No Entry | Simple door with X | Person behind door with hand up in "stop" gesture |
-| Right to Silence | Circle with lips | Person with finger over lips (shh gesture) |
-| No Search Without Consent | Basic palm | Two hands - one reaching, one blocking |
-| Right to a Lawyer | Phone handset | Person on phone or phone with speech bubble |
+Updating the rights card to match the reference style: cream icon backgrounds with dark icons, and a single-line headline.
 
 ---
 
-## Visual Style
+## Visual Changes
 
-- **Stroke weight**: Thick 3-4px main strokes
-- **Human elements**: Simplified figures with expressive gestures
-- **Color scheme**: White primary strokes + Brick Red (`#B8352E`) accent fills
-- **Background**: Keep black (`#1A1A1A`) boxes for maximum contrast
+| Element | Current | New |
+|---------|---------|-----|
+| Icon box background | Black `#1A1A1A` | Cream `#F5F2E8` |
+| Icon strokes | White | Black `#1A1A1A` |
+| Icon accents | Brick Red `#B8352E` | Brick Red `#B8352E` (keep) |
+| Icon box border | None | 3px solid `#1A1A1A` |
+| "MY RIGHTS" | 96px, two lines | 72px, single line |
+| Rights strip height | 72px | 88px |
+| Rights strip text | 22px | 26px |
+
+---
+
+## Reference Alignment
+
+The reference image shows:
+- Light/cream icon backgrounds with dark silhouettes
+- Bold, high-contrast black icons
+- Single-line "MY RIGHTS" headline
+- Larger rights strips with prominent text
 
 ---
 
@@ -30,36 +34,29 @@ Redesign the four rights card icons to be more illustrative with human figures, 
 
 ### File: `src/components/RightsCard.tsx`
 
-**Redesign DoorIcon (lines 21-27)**
-New design: Person silhouette behind door with raised palm
-- White stroke for door frame and person outline
-- Brick red fill for the "stop" palm gesture
+**Update all icon SVGs (lines 23-79)**
+- Change all `stroke="white"` to `stroke="#1A1A1A"`
+- Change all `fill="white"` to `fill="#1A1A1A"`
+- Keep brick red `#B8352E` accents as-is
 
-**Redesign SilenceIcon (lines 29-37)**
-New design: Face profile with finger over lips
-- White stroke for head outline
-- Brick red fill for the "shh" finger
+**Update "MY RIGHTS" headline (lines 154-165)**
+- Reduce fontSize from `96px` to `72px`
+- Remove the `<br />` to make it single line
+- Adjust marginBottom to `16px`
 
-**Redesign HandIcon (lines 39-45)**
-New design: Two-hand scene - reaching hand blocked by stop palm
-- White stroke for both hands
-- Brick red fill for the blocking palm
+**Update icon box styling (lines 180-189)**
+- Change backgroundColor from `#1A1A1A` to `#F5F2E8`
+- Add border: `3px solid #1A1A1A`
+- Add borderRadius for left corners: `12px 0 0 12px`
 
-**Redesign PhoneIcon (lines 47-52)**
-New design: Person holding phone with speech bubble
-- White stroke for figure and phone
-- Brick red fill for speech bubble (represents lawyer)
+**Update rights strip dimensions (lines 172-177)**
+- Increase height from `72px` to `88px`
 
----
+**Update icon box dimensions (lines 181-182)**
+- Increase width/height from `72px` to `88px`
 
-## Icon Specifications
-
-Each icon will be:
-- 32x32 viewBox (same as current)
-- strokeWidth="3" for main elements
-- White (`#FFFFFF`) for primary strokes
-- Brick Red (`#B8352E`) for accent fills
-- Designed for legibility at 72x72px display size
+**Update rights strip text (line 209)**
+- Increase fontSize from `22px` to `26px`
 
 ---
 
@@ -67,5 +64,5 @@ Each icon will be:
 
 | File | Changes |
 |------|---------|
-| `src/components/RightsCard.tsx` | Replace all 4 SVG icon components with new illustrative designs |
+| `src/components/RightsCard.tsx` | Reverse icon colors, resize headline, enlarge rights strips |
 
