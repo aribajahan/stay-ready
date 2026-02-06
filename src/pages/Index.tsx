@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { FileText, BookOpen, Phone } from 'lucide-react';
+import heroFist from '@/assets/hero-fist.png';
 
 export default function Index() {
   return (
@@ -7,13 +8,23 @@ export default function Index() {
       {/* Main content */}
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm text-center">
-          {/* Headline */}
-          <h1 className="text-5xl tracking-wide text-headline mb-3">
-            Know Your Rights
-          </h1>
-          <p className="text-foreground text-lg font-medium mb-10">
-            Be prepared. Stay calm. Know your rights.
-          </p>
+          {/* Headline with background image */}
+          <div className="relative mb-10">
+            <img 
+              src={heroFist} 
+              alt="" 
+              className="absolute inset-0 w-full h-full object-contain opacity-20 pointer-events-none"
+              aria-hidden="true"
+            />
+            <div className="relative py-8">
+              <h1 className="text-5xl tracking-wide text-headline mb-3">
+                Know Your Rights
+              </h1>
+              <p className="text-foreground text-lg font-medium">
+                Be prepared. Stay calm. Know your rights.
+              </p>
+            </div>
+          </div>
 
           {/* Action cards */}
           <div className="space-y-4 mb-8">
@@ -35,7 +46,7 @@ export default function Index() {
             </Link>
 
             <Link
-              to="/review"
+              to="/rights"
               className="block bg-card text-foreground rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-all duration-200"
             >
               <div className="flex items-center gap-4">

@@ -19,56 +19,56 @@ const getStatusBadge = (status: ImmigrationStatus): string => {
   }
 };
 
-// Bold linocut/woodcut style icons - white on red, thick strokes, solid fills
+// Bold linocut/woodcut style icons - white on red, thick strokes, solid fills (scaled 1.4x)
 const DoorIcon = () => (
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Bold door shape */}
-    <rect x="8" y="4" width="18" height="32" rx="2" fill="white"/>
+    <rect x="11" y="6" width="25" height="45" rx="3" fill="white"/>
     {/* Door panel detail */}
-    <rect x="12" y="8" width="10" height="12" rx="1" stroke="#B91C1C" strokeWidth="2"/>
-    <rect x="12" y="24" width="10" height="8" rx="1" stroke="#B91C1C" strokeWidth="2"/>
+    <rect x="17" y="11" width="14" height="17" rx="1" stroke="#B91C1C" strokeWidth="3"/>
+    <rect x="17" y="34" width="14" height="11" rx="1" stroke="#B91C1C" strokeWidth="3"/>
     {/* Door handle */}
-    <circle cx="20" cy="20" r="2" fill="#B91C1C"/>
+    <circle cx="28" cy="28" r="3" fill="#B91C1C"/>
     {/* Bold X blocking */}
-    <path d="M26 8L38 20M38 8L26 20" stroke="white" strokeWidth="4" strokeLinecap="round"/>
+    <path d="M36 11L53 28M53 11L36 28" stroke="white" strokeWidth="5" strokeLinecap="round"/>
   </svg>
 );
 
 const SilenceIcon = () => (
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Bold lips shape */}
-    <ellipse cx="20" cy="20" rx="16" ry="10" fill="white"/>
+    <ellipse cx="28" cy="28" rx="22" ry="14" fill="white"/>
     {/* Mouth line sealed */}
-    <path d="M8 20H32" stroke="#B91C1C" strokeWidth="4" strokeLinecap="round"/>
+    <path d="M11 28H45" stroke="#B91C1C" strokeWidth="5" strokeLinecap="round"/>
     {/* Bold strike-through */}
-    <path d="M6 32L34 8" stroke="white" strokeWidth="4" strokeLinecap="round"/>
+    <path d="M8 45L48 11" stroke="white" strokeWidth="5" strokeLinecap="round"/>
   </svg>
 );
 
 const HandIcon = () => (
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Bold open palm - stop gesture */}
-    <path d="M20 4V14" stroke="white" strokeWidth="5" strokeLinecap="round"/>
-    <path d="M12 8V16" stroke="white" strokeWidth="5" strokeLinecap="round"/>
-    <path d="M28 8V16" stroke="white" strokeWidth="5" strokeLinecap="round"/>
-    <path d="M6 14V20" stroke="white" strokeWidth="5" strokeLinecap="round"/>
-    <path d="M34 14V20" stroke="white" strokeWidth="5" strokeLinecap="round"/>
+    <path d="M28 6V20" stroke="white" strokeWidth="7" strokeLinecap="round"/>
+    <path d="M17 11V22" stroke="white" strokeWidth="7" strokeLinecap="round"/>
+    <path d="M39 11V22" stroke="white" strokeWidth="7" strokeLinecap="round"/>
+    <path d="M8 20V28" stroke="white" strokeWidth="7" strokeLinecap="round"/>
+    <path d="M48 20V28" stroke="white" strokeWidth="7" strokeLinecap="round"/>
     {/* Palm base */}
-    <path d="M6 20C6 20 6 36 20 36C34 36 34 20 34 20" stroke="white" strokeWidth="5" strokeLinecap="round"/>
+    <path d="M8 28C8 28 8 50 28 50C48 50 48 28 48 28" stroke="white" strokeWidth="7" strokeLinecap="round"/>
   </svg>
 );
 
 const PhoneIcon = () => (
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Bold phone handset */}
-    <path d="M8 8C8 8 6 8 6 12V16C6 18 8 18 8 18" stroke="white" strokeWidth="5" strokeLinecap="round"/>
-    <path d="M8 18L12 22L16 18" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M16 18C16 18 18 18 18 22V26C18 28 16 28 16 28" stroke="white" strokeWidth="5" strokeLinecap="round"/>
+    <path d="M11 11C11 11 8 11 8 17V22C8 25 11 25 11 25" stroke="white" strokeWidth="7" strokeLinecap="round"/>
+    <path d="M11 25L17 31L22 25" stroke="white" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M22 25C22 25 25 25 25 31V36C25 39 22 39 22 39" stroke="white" strokeWidth="7" strokeLinecap="round"/>
     {/* Cord/connection */}
-    <path d="M8 12C12 12 12 24 16 24" stroke="white" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M11 17C17 17 17 34 22 34" stroke="white" strokeWidth="4" strokeLinecap="round"/>
     {/* Signal waves */}
-    <path d="M24 10C26 10 28 12 28 16" stroke="white" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M26 6C30 6 34 10 34 18" stroke="white" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M34 14C36 14 39 17 39 22" stroke="white" strokeWidth="4" strokeLinecap="round"/>
+    <path d="M36 8C42 8 48 14 48 25" stroke="white" strokeWidth="4" strokeLinecap="round"/>
   </svg>
 );
 
