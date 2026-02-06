@@ -1,76 +1,59 @@
 
 
-# Overlapping Typography & Remove Hero Image
+# Bigger Headline & Homepage Visual Improvements
 
-## Overview
+## 1. Make the Header Bigger
 
-Two changes to create a more dramatic, poster-style headline treatment:
-1. Remove the hero image entirely
-2. Create overlapping typography where "know your rights" sits partially behind/over "STAY READY"
+**Current sizes**:
+- Handwritten "know your rights": `text-4xl` (~36px)
+- Main headline "Stay Ready": `text-6xl` (~60px)
+
+**Proposed sizes**:
+- Handwritten text: `text-4xl` → `text-5xl` (~48px)
+- Main headline: `text-6xl` → `text-7xl` or `text-8xl` (~72-96px)
+- Increase negative margin for more dramatic overlap: `-mb-4` → `-mb-6`
 
 ---
 
-## Visual Goal
+## 2. Additional Homepage Improvements
 
-Based on the reference image style, the handwritten text should overlap with the bold headline:
+Here are several ideas to make the homepage more impactful:
 
+| Improvement | Description |
+|-------------|-------------|
+| **More vertical breathing room** | Increase spacing between headline and action cards (`mb-10` → `mb-12` or `mb-16`) |
+| **Bolder subheadline** | Make the subhead slightly larger (`text-lg` → `text-xl`) for better hierarchy |
+| **Add subtle background texture** | A light grain or paper texture could reinforce the activist/zine aesthetic |
+| **Language selector prominence** | Add a visible language toggle at the top for accessibility |
+| **Animated entrance** | Subtle fade-in or slide-up animation on page load for polish |
+| **Decorative accent** | A small red accent line or shape near the headline |
+| **Hotline more prominent** | Move hotline box above the action cards or give it a colored background |
+
+---
+
+## Recommended Quick Wins
+
+For immediate impact, I suggest these changes:
+
+### Typography Scale-Up
 ```text
-      know your rights     <-- Caveat font, positioned to overlap
-   STAY READY              <-- Anton font, large, partially covered
+Handwritten:  text-4xl  →  text-5xl
+Headline:     text-6xl  →  text-7xl (or text-8xl for maximum impact)
+Overlap:      -mb-4     →  -mb-6
+Subhead:      text-lg   →  text-xl
 ```
 
-The handwritten script will use negative margin or absolute positioning to sit above and slightly overlap the main headline, creating depth.
+### Spacing Improvements
+```text
+Headline section margin: mb-10 → mb-14
+Container max-width:     max-w-sm → max-w-md (slightly wider)
+```
 
----
-
-## Technical Implementation
-
-### File: `src/pages/Index.tsx`
-
-**Remove hero image section (lines 11-16)**
-- Delete the `<img>` tag and its container
-- Remove the unused `heroFist` import at the top
-
-**Restructure headline section for overlap**
-- Use `relative` positioning on the container
-- Position "know your rights" with negative bottom margin (`-mb-4` or similar) so it overlaps into "STAY READY"
-- Increase sizes:
-  - Handwritten text: `text-3xl` or `text-4xl` (up from `text-2xl`)
-  - Main headline: `text-6xl` or `text-7xl` (up from `text-5xl`)
-- Add `relative z-0` to main headline so handwritten text appears "behind" it
-
-**Updated structure**:
+### Optional: Decorative Red Line
+Add a small horizontal accent line below the subheadline:
 ```tsx
-<div className="mb-10 relative">
-  {/* Handwritten accent - overlaps into headline */}
-  <p 
-    className="text-muted-foreground/40 text-3xl uppercase -mb-3 relative z-0"
-    style={{ fontFamily: 'Caveat, cursive' }}
-  >
-    know your rights
-  </p>
-  
-  {/* Main headline - sits on top */}
-  <h1 className="text-6xl tracking-wide text-headline mb-4 relative z-10">
-    Stay Ready
-  </h1>
-  
-  <p className="text-foreground text-lg font-medium">
-    Know what to say if ICE comes to your door, car, or workplace.
-  </p>
-</div>
+<div className="w-12 h-1 bg-primary mx-auto mt-4" />
 ```
-
----
-
-## Changes Summary
-
-| Element | Before | After |
-|---------|--------|-------|
-| Hero image | 144px tall fist image | Removed |
-| Handwritten text | `text-2xl`, `mb-1` | `text-3xl`, `-mb-3` (overlaps) |
-| Main headline | `text-5xl` | `text-6xl` |
-| Z-index layering | None | Handwritten `z-0`, headline `z-10` |
 
 ---
 
@@ -78,5 +61,20 @@ The handwritten script will use negative margin or absolute positioning to sit a
 
 | File | Changes |
 |------|---------|
-| `src/pages/Index.tsx` | Remove hero image, create overlapping typography with increased sizes |
+| `src/pages/Index.tsx` | Increase headline sizes, adjust spacing, optional decorative elements |
+
+---
+
+## Visual Preview
+
+```text
+Current:                          After:
+                                  
+   know your rights (4xl)            know your rights (5xl)
+   STAY READY (6xl)                     STAY READY (7xl/8xl)
+                                  
+   [subhead]                         [subhead - larger]
+                                         ────
+   [cards]                           [cards with more spacing]
+```
 
