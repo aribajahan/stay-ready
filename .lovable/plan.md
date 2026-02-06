@@ -1,60 +1,20 @@
 
-# Fix Review Rights Flow, Enlarge Card Icons & Add Hero Image
 
-## Summary of Issues and Changes
+# Move Hero Image Above Headline
 
-### Issue 1: Broken "Review Your Rights" Navigation
-The home page links to `/review` but the route is registered as `/rights`, causing users to hit a 404.
-
-### Issue 2: Card Icons Too Small
-The SVG icons are currently 40x40 viewBox displayed in 88x88 boxes - they should be larger to fill the space better.
-
-### Issue 3: Home Page Hero Image
-Add the uploaded fist/gavel illustration as a subtle background behind the "Know Your Rights" headline.
+Relocating the fist/gavel image from a background element to a prominent hero banner position at the top of the page.
 
 ---
 
-## Technical Changes
-
-### File: `src/pages/Index.tsx`
-
-**Fix navigation link (line 38)**
-- Change `to="/review"` to `to="/rights"` to match the actual route
-
-**Add hero image behind headline**
-- Copy the uploaded image to `src/assets/hero-fist.png`
-- Import the image at top of file
-- Wrap the headline section in a container with the image as a background
-- Apply reduced opacity (~20-30%) so text remains readable
-- Keep the cream background showing through
-
-### File: `src/components/RightsCard.tsx`
-
-**Enlarge icon SVGs (lines 23-73)**
-- Increase viewBox from 40x40 to 56x56 for all four icons
-- Scale up internal SVG elements proportionally (multiply coordinates by 1.4)
-- Increase width/height attributes from 40 to 56
-- This makes icons fill ~64% of the 88px box vs current ~45%
-
----
-
-## Icon Scaling Details
-
-| Icon | Current Size | New Size | Change |
-|------|--------------|----------|--------|
-| DoorIcon | 40x40 | 56x56 | +40% |
-| SilenceIcon | 40x40 | 56x56 | +40% |
-| HandIcon | 40x40 | 56x56 | +40% |
-| PhoneIcon | 40x40 | 56x56 | +40% |
-
----
-
-## Home Page Layout with Hero Image
+## New Layout
 
 ```text
 +----------------------------------+
 |                                  |
-|   [Hero image @ 20% opacity]     |
+|     [Fist/Gavel Image]           |
+|        (120-160px height)        |
+|                                  |
++----------------------------------+
 |                                  |
 |      KNOW YOUR RIGHTS            |
 |   Be prepared. Stay calm...      |
@@ -66,10 +26,35 @@ Add the uploaded fist/gavel illustration as a subtle background behind the "Know
 +----------------------------------+
 ```
 
-The image will be positioned absolutely behind the headline with:
-- `opacity: 0.15` to `0.25` for subtlety
-- Contained sizing so it doesn't overflow
-- Centered positioning
+---
+
+## Technical Changes
+
+### File: `src/pages/Index.tsx`
+
+**Remove background image approach (lines 13-24)**
+- Remove the `relative` container wrapper
+- Remove the absolutely positioned background image
+- Remove the `relative py-8` inner wrapper
+
+**Add hero image as standalone element**
+- Place the image above the headline in a centered container
+- Set height to `h-32` to `h-40` (128-160px)
+- Apply `object-contain` to preserve aspect ratio
+- Keep some margin below (`mb-6`) before the headline
+
+**Updated headline section**
+- Restore simple headline without positioning complexity
+- Keep the same text styling and spacing
+
+---
+
+## Visual Treatment Options
+
+The image can be displayed with:
+- Full color at 100% opacity for maximum impact
+- Slightly reduced opacity (80-90%) for a softer look
+- Optional subtle drop shadow for depth
 
 ---
 
@@ -77,15 +62,5 @@ The image will be positioned absolutely behind the headline with:
 
 | File | Changes |
 |------|---------|
-| `src/pages/Index.tsx` | Fix link from `/review` to `/rights`, add hero image background |
-| `src/components/RightsCard.tsx` | Scale up all 4 icon SVGs from 40x40 to 56x56 |
-| `src/assets/hero-fist.png` | Copy uploaded image here (new file) |
+| `src/pages/Index.tsx` | Move image from background to above headline |
 
----
-
-## Steps
-
-1. Copy uploaded image to `src/assets/hero-fist.png`
-2. Fix the navigation link in Index.tsx from `/review` to `/rights`
-3. Add the hero image as a background behind the headline section
-4. Scale up all four SVG icons in RightsCard.tsx
