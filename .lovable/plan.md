@@ -1,31 +1,73 @@
 
 
-## Remove Language Selection from "Prepare My Card" Flow
+## Fixes and Enhancements for Card Flow
 
-Since the rights card is always generated in English, the language selection step should be removed from the card preparation flow. Language selection only affects the UI text and educational content in the "Review My Rights" section.
+Based on my code review, I've identified all the issues and will implement the following changes:
 
-### Changes
+### 1. Emergency Contacts on Card - Already Working
 
-**1. Update `src/pages/PrepareCard.tsx`**
-- Remove `'language'` from the `Step` type and `steps` array
-- Remove the `LanguageSelector` import (no longer needed)
-- Change the initial step from `'language'` to `'status'`
-- Update `startOver()` function to reset to `'status'` instead of `'language'`
-- Remove the `case 'language'` from the switch statement
+Good news: The emergency contacts section **is already implemented** in `RightsCard.tsx` (lines 186-217). If contacts aren't appearing, it may be a display or data passing issue. I'll verify the card is receiving the contacts correctly.
 
-The new flow will be:
-```text
-Status (auto-advance) -> Documents -> Contacts -> Preview -> Card
-```
+### 2. Phone Number Validation - Already Working
 
-This reduces the steps from 6 to 5, making the card creation faster and more focused.
+The phone validation is **already implemented** in `EmergencyContactForm.tsx` (lines 11-18). It validates:
+- Minimum 10 digits (US phone numbers)
+- Maximum 15 digits (international)
+- Formats display as `(XXX) XXX-XXXX` for 10-digit numbers
 
-### Technical Details
+### 3. Update Document Types for ICE Context
 
-```text
-Current flow:  Language -> Status -> Documents -> Contacts -> Preview -> Card
-New flow:                  Status -> Documents -> Contacts -> Preview -> Card
-```
+Current document types include some that aren't relevant for immigration purposes. I'll update `src/types/card.ts` to use immigration-relevant documents:
 
-The `LanguageSelector` component will remain in the codebase for use in the "Review My Rights" flow where it's still needed.
+**Current types:**
+- Passport, Driver's License, State ID, Work Permit, Green Card, Other
+
+**Updated types:**
+- Green Card (Permanent Resident Card)
+- Work Permit (EAD)
+- Visa / I-94
+- DACA Approval Notice
+- TPS Card
+- Passport (with visa)
+- Other
+
+### 4. Final Screen - Replace Buttons
+
+**Current buttons on card screen:**
+- Save to Phone
+- Share
+- Start Over
+
+**New buttons:**
+- Download Image (primary)
+- Review My Rights (navigates to `/review`)
+- Start Over (subtle link)
+
+### 5. Add Language Selector to Review Rights Flow
+
+Add a language selector dropdown or modal at the top of the Review Rights page so users can switch languages before reading the content.
+
+---
+
+## Technical Changes
+
+### File: `src/types/card.ts`
+- Update `DocumentType` to include immigration-relevant document types
+- Update `documentLabels` to match new types
+
+### File: `src/components/DocumentForm.tsx`
+- Update `documentOptions` array with new document types
+
+### File: `src/pages/PrepareCard.tsx`
+- Replace "Share" button with "Review My Rights" button
+- Add navigation to `/review` when clicked
+- Keep Download Image as primary action
+
+### File: `src/pages/ReviewRights.tsx`
+- Import `LanguageSelector` component
+- Add language selector UI at the top of the page (either inline buttons or a dropdown)
+- Allow users to switch language before reading content
+
+### File: `src/contexts/LanguageContext.tsx`
+- Add new translation key for "Review My Rights" button label on card screen
 
