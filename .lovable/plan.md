@@ -1,92 +1,183 @@
 
+# Unified Hover States + Hotline Button Treatment
 
-# Sharp Corners Fix + Making This Feel Less AI-Generated
+## The Problem
 
-## Part 1: Fix Remaining Rounded Corners
+Currently there are 3 different hover behaviors on the home page:
+1. **Primary button**: Brackets extend to full border + background shift
+2. **Secondary button**: Underline thickens
+3. **Phone number**: Opacity fades
 
-Found `rounded-2xl` and `rounded-xl` still in these components:
-
-| File | Elements with rounded corners |
-|------|-------------------------------|
-| `src/components/DocumentForm.tsx` | Selection buttons (line 46), input field (line 69) |
-| `src/components/EmergencyContactForm.tsx` | Contact cards (line 83), remove button (line 91), inputs (lines 108, 116), add button (line 127) |
-| `src/components/LanguageSelector.tsx` | Language buttons (line 27) |
-| `src/components/RightsCard.tsx` | Rights strips (lines 183, 193, 209), bars (lines 235, 292) |
-
-### Changes Required
-
-Replace all `rounded-2xl` and `rounded-xl` with `rounded-none`:
-
-**DocumentForm.tsx:**
-- Line 46: `rounded-2xl` to nothing (sharp)
-- Line 69: `rounded-2xl` to nothing
-
-**EmergencyContactForm.tsx:**
-- Line 83: `rounded-2xl` to nothing
-- Line 91: `rounded-xl` to nothing
-- Line 108: `rounded-2xl` to nothing
-- Line 116: `rounded-2xl` to nothing
-- Line 127: `rounded-2xl` to nothing
-
-**LanguageSelector.tsx:**
-- Line 27: `rounded-2xl` to nothing
-
-**RightsCard.tsx:**
-- Multiple `borderRadius: '12px'` inline styles to `borderRadius: '0'`
+This feels inconsistent and jarring. Everything should use the same visual language.
 
 ---
 
-## Part 2: Making This Feel Less AI-Generated
+## The Solution
 
-Here are specific design interventions that add human intentionality and break the "template" feel:
+### Unified Hover: Brackets Extend
 
-### 1. Asymmetric Details
-AI tends to make everything perfectly centered and balanced. Add intentional asymmetry:
-- **Offset accent marks**: A small black square or dash positioned off-center near headlines
-- **Uneven margins**: Slightly different left/right padding in certain sections (e.g., 24px left, 20px right)
+Apply the **same bracket-extension hover** to all interactive elements:
 
-### 2. Editorial Typography Flourishes
-- **Pull quotes with oversized quotation marks**: Large `"` character (64px+) in a lighter gray before "What to say" text
-- **Numbered lists with bold oversized numbers**: Instead of bullets, use `01.`, `02.` with the number in a heavier weight
-- **Em dashes with spacing**: Replace hyphens with proper em dashes surrounded by thin spaces
+| Element | Current Hover | New Hover |
+|---------|---------------|-----------|
+| Primary button | Brackets extend ✓ | Keep |
+| Secondary button | Underline thickens | **Brackets extend** |
+| Hotline section | Opacity fade | **Brackets extend** |
 
-### 3. Intentional White Space
-- **Generous margins around the headline**: More vertical breathing room (e.g., `py-8` instead of `py-4`)
-- **Section breaks**: Thin horizontal rules (1px) in muted gray between major sections
-
-### 4. Micro-Interactions That Feel Crafted
-- **Underline on hover instead of background change**: Links/buttons get a thick underline (2-3px) that animates in
-- **Subtle hover lift**: Cards lift 2px on hover with a slight shadow increase
-
-### 5. Distinct Visual Anchors
-- **Page-level accent**: A thick black vertical line (4px) running down the left edge of the page on desktop
-- **Section markers**: Small black squares (8x8px) next to section titles
-
-### 6. Handcrafted Details on Forms
-- **Input focus state**: Instead of a ring, show a thick bottom border that slides in from the left
-- **Labels above inputs**: Position labels inside the field that animate up when focused (floating labels)
-- **Custom checkmarks**: Replace default checkboxes with bold, hand-drawn style checkmarks
-
-### 7. The "Rights Card" Should Feel Like a Protest Poster
-- **Remove all border-radius** (already doing this)
-- **Bolder contrast**: Thicker borders (4px instead of 3px)
-- **Stencil-style text**: Consider uppercase throughout with tighter letter-spacing
+This creates one consistent interaction pattern: **hover = brackets grow**.
 
 ---
 
-## Recommended High-Impact Changes
+## Phone Number → Black
 
-For immediate implementation:
+Change from red to black. The hotline section itself will have brackets, making it clear it's interactive.
 
-| Change | Impact | Effort |
-|--------|--------|--------|
-| Remove all remaining rounded corners | High | Low |
-| Add oversized pull quote marks to "What to say" | High | Low |
-| Thick underline hover on buttons instead of opacity | Medium | Low |
-| Add thin horizontal rules between sections | Medium | Low |
-| Numbered lists with bold oversized numbers | Medium | Medium |
-| Floating label inputs | High | Medium |
-| Vertical accent line on left edge | Medium | Low |
+---
+
+## "Report ICE Activity" → Bracket Button
+
+Turn the entire hotline section into a clickable bracket button:
+
+```text
+Current:
+────────────────────────────
+REPORT ICE ACTIVITY
+United We Dream  1-844-363-1423  24/7
+
+After:
+┌                              ┐
+  REPORT ICE ACTIVITY
+  United We Dream
+  1-844-363-1423  •  24/7
+└                              ┘
+(brackets extend on hover, clicking dials the number)
+```
+
+This makes it feel like a third action alongside "Prepare My Card" and "Review My Rights".
+
+---
+
+## Implementation
+
+### File: `src/index.css`
+
+Update `.btn-text` to also use bracket hover (smaller brackets):
+
+```css
+.btn-text {
+  @apply relative inline-flex items-center justify-center py-4 px-6 font-semibold text-foreground bg-transparent transition-all duration-300;
+}
+
+.btn-text::before,
+.btn-text::after {
+  content: '';
+  @apply absolute w-3 h-3 transition-all duration-300 opacity-0;
+  border-color: hsl(var(--foreground));
+}
+
+.btn-text::before {
+  @apply top-0 left-0;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.btn-text::after {
+  @apply bottom-0 right-0;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.btn-text:hover::before,
+.btn-text:hover::after {
+  @apply opacity-100 w-5 h-5;
+}
+```
+
+Add new `.btn-hotline` class for the hotline section (larger, stacked layout):
+
+```css
+.btn-hotline {
+  @apply relative block text-left px-8 py-6 transition-all duration-300;
+}
+
+.btn-hotline::before,
+.btn-hotline::after {
+  content: '';
+  @apply absolute w-5 h-5 transition-all duration-300;
+  border-color: hsl(var(--foreground));
+}
+
+.btn-hotline::before {
+  @apply top-0 left-0;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.btn-hotline::after {
+  @apply bottom-0 right-0;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.btn-hotline:hover::before,
+.btn-hotline:hover::after {
+  @apply w-full h-full;
+}
+
+.btn-hotline:hover {
+  @apply bg-accent/50;
+}
+```
+
+### File: `src/pages/Index.tsx`
+
+Update the hotline section to use the bracket button style:
+
+```tsx
+{/* Hotline - bracket button style */}
+<a 
+  href="tel:1-844-363-1423" 
+  className="btn-hotline block border-t border-border/50 mt-8"
+>
+  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+    Report ICE Activity
+  </p>
+  <p className="text-sm font-medium text-muted-foreground mb-1">
+    United We Dream
+  </p>
+  <div className="flex items-baseline gap-3">
+    <span className="text-foreground font-bold text-xl">
+      1-844-363-1423
+    </span>
+    <span className="text-xs font-semibold text-muted-foreground">24/7</span>
+  </div>
+</a>
+```
+
+---
+
+## Visual Result
+
+```text
+┌                              ┐
+       PREPARE MY CARD  →
+└                              ┘
+
+       REVIEW MY RIGHTS  →
+      (small brackets appear on hover)
+
+────────────────────────────────
+
+┌                              ┐
+  REPORT ICE ACTIVITY
+  United We Dream
+  1-844-363-1423  •  24/7
+└                              ┘
+```
+
+All three interactive elements now share the same visual language:
+- **Resting**: Corner brackets (visible or subtle)
+- **Hover**: Brackets extend, background shifts
 
 ---
 
@@ -94,48 +185,5 @@ For immediate implementation:
 
 | File | Changes |
 |------|---------|
-| `src/components/DocumentForm.tsx` | Remove `rounded-2xl` |
-| `src/components/EmergencyContactForm.tsx` | Remove `rounded-2xl`, `rounded-xl` |
-| `src/components/LanguageSelector.tsx` | Remove `rounded-2xl` |
-| `src/components/RightsCard.tsx` | Remove all `borderRadius` |
-| `src/index.css` | Add new hover styles, pull quote utility |
-| Rights pages | Add oversized quote marks to "What to say" boxes |
-
----
-
-## Visual Examples
-
-### Oversized Pull Quote
-```text
-Current:
-┃  What to say:
-┃  "I am exercising my right..."
-
-After:
-┃  "  What to say:
-┃     "I am exercising my right..."
-   (with a 48px light gray " before the text)
-```
-
-### Numbered List Style
-```text
-Current:
-• Stay calm
-• Ask if you are free to leave
-• Request a lawyer
-
-After:
-01  Stay calm
-02  Ask if you are free to leave
-03  Request a lawyer
-(numbers in bold, slightly larger)
-```
-
-### Thick Underline Hover
-```text
-Button at rest:       [  NEXT  ]
-Button on hover:      [  NEXT  ]
-                       ────────
-                      (3px black underline animates in)
-```
-
+| `src/index.css` | Update `.btn-text` with bracket hover, add `.btn-hotline` class |
+| `src/pages/Index.tsx` | Make phone number black, wrap hotline section in bracket button |
