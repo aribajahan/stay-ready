@@ -193,7 +193,7 @@ export default function PrepareCard() {
             Download Card
           </button>
           <Link
-            to="/review"
+            to="/rights"
             className="w-full flex items-center justify-center gap-2 p-4 text-base font-medium bg-card text-foreground shadow-card hover:shadow-card-hover transition-all duration-200"
           >
             <BookOpen size={18} className="opacity-50" />
