@@ -1,101 +1,192 @@
 
 
-# Unified Bracket Hover for Menu Items
+# Mobile-First Simplification
 
-## Current State
+## The Problems
 
-The Review Rights page menu items (`.menu-item`) currently have a simple hover:
-- Text fades to muted gray
-- No bracket animation
+1. **Review My Rights menu**: Plain text list doesn't look tappable on mobile (no hover = no feedback)
+2. **Homepage has 3 different button styles**: Inconsistent visual language
+3. **Hotline brackets feel heavy**: Draws too much attention away from the primary action
 
-This feels inconsistent with the home page's unified bracket language.
+---
 
-## The Fix
+## The Solution
 
-Apply the same subtle bracket-appear hover to menu items that the secondary button uses.
+### Homepage: 2 Button Styles Only
 
-| Element | Current Hover | New Hover |
-|---------|---------------|-----------|
-| Menu items | Text fades gray | Small brackets appear (like `.btn-text`) |
-| Chevron arrow | Static gray | Stays static (no change) |
+| Element | Current | New |
+|---------|---------|-----|
+| PREPARE MY CARD | Solid black button | Keep (primary action) |
+| REVIEW MY RIGHTS | Underlined text | Keep (secondary action) |
+| Report ICE Activity | Bracket button | **Remove brackets, make it a simple footer element** |
+
+The hotline should feel like helpful info in the footer area, not a third competing action.
+
+### Review My Rights Menu: Add Visual Affordance
+
+Make each row clearly look tappable:
+
+| Element | Current | New |
+|---------|---------|-----|
+| Menu items | Plain text, underline on hover | **Add chevron (>) to indicate tappable, remove underline hover** |
+
+The chevron (>) is a universal mobile pattern that says "tap to go somewhere."
+
+---
+
+## Homepage Layout Change
+
+Move the hotline section further down and simplify it:
+
+```text
+Current:
+┌─────────────────────────────┐
+│     PREPARE MY CARD         │  ← Primary
+└─────────────────────────────┘
+
+      REVIEW MY RIGHTS         ← Secondary (underlined)
+
+┌                             ┐
+│  REPORT ICE ACTIVITY        │  ← Feels like 3rd CTA
+│  1-844-363-1423             │
+└                             ┘
+
+──────────────────────────────
+Footer disclaimer
+
+
+After:
+┌─────────────────────────────┐
+│     PREPARE MY CARD         │  ← Primary
+└─────────────────────────────┘
+
+      REVIEW MY RIGHTS         ← Secondary (underlined)
+
+
+
+──────────────────────────────
+REPORT ICE ACTIVITY            ← Demoted to footer info
+United We Dream
+1-844-363-1423  •  24/7
+
+Footer disclaimer
+```
+
+The hotline becomes part of the footer — still prominent, still tappable, but not competing with the two main actions.
+
+---
+
+## Review My Rights Menu: Chevron Pattern
+
+```text
+Current (no hover feedback on mobile):
+  Your Universal Rights
+  ────────────────────
+  ICE at Your Door
+  ────────────────────
+  Stopped in Your Car
+
+
+After (clear tap affordance):
+  Your Universal Rights                    >
+  ─────────────────────────────────────────
+  ICE at Your Door                         >
+  ─────────────────────────────────────────
+  Stopped in Your Car                      >
+```
+
+The chevron makes it obvious these are links, even without hover.
+
+---
 
 ## Implementation
 
 ### File: `src/index.css`
 
-Update `.menu-item` to include bracket pseudo-elements:
+Remove `.btn-hotline` bracket styles entirely. Update `.menu-item` to include chevron support:
 
 ```css
-/* Menu item - minimal with bracket hover */
+/* Menu item - with chevron for tap affordance */
 .menu-item {
-  @apply relative flex items-center justify-between py-5 border-b border-border/50 transition-all duration-300;
-}
-
-.menu-item::before,
-.menu-item::after {
-  content: '';
-  @apply absolute w-3 h-3 transition-all duration-300 opacity-0;
-  border-color: hsl(var(--foreground));
-}
-
-.menu-item::before {
-  @apply top-2 left-0;
-  border-top: 2px solid;
-  border-left: 2px solid;
-}
-
-.menu-item::after {
-  @apply bottom-2 right-0;
-  border-bottom: 2px solid;
-  border-right: 2px solid;
+  @apply flex items-center justify-between py-4 border-b border-border/50 font-medium text-foreground transition-colors duration-200;
 }
 
 .menu-item:last-child {
   @apply border-b-0;
 }
 
-.menu-item:hover::before,
-.menu-item:hover::after {
-  @apply opacity-100 w-4 h-4;
-}
-
-.menu-item:hover {
+.menu-item:active {
   @apply bg-accent/30;
 }
 ```
 
-Key differences from `.btn-text`:
-- Brackets positioned inward (`top-2`, `bottom-2`) to not overlap the border
-- Slightly smaller final size (`w-4 h-4` vs `w-5 h-5`)
-- Very subtle background shift (`bg-accent/30` vs `bg-accent/50`)
+### File: `src/pages/Index.tsx`
 
-## Visual Result
+Move hotline into the footer area, remove bracket styling:
 
-```text
-Current (hover):
-  ICE at Your Door                    >
-  (text fades gray)
-
-After (hover):
-┌                                      ┐
-  ICE at Your Door                    >
-└                                      ┘
-  (small brackets appear, subtle bg shift)
+```tsx
+{/* Footer with hotline */}
+<footer className="px-6 pb-8 pt-16">
+  {/* Hotline - simple footer style */}
+  <a 
+    href="tel:1-844-363-1423" 
+    className="block text-center mb-8"
+  >
+    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-1">
+      Report ICE Activity
+    </p>
+    <p className="text-sm font-medium text-muted-foreground mb-1">
+      United We Dream
+    </p>
+    <span className="text-foreground font-bold text-lg underline underline-offset-4">
+      1-844-363-1423
+    </span>
+    <span className="text-xs font-semibold text-muted-foreground ml-2">24/7</span>
+  </a>
+  
+  <p className="text-xs text-muted-foreground max-w-sm mx-auto leading-relaxed text-center">
+    This tool provides general information...
+  </p>
+</footer>
 ```
 
-## About "Too Much Animation"
+### File: `src/pages/ReviewRights.tsx`
 
-This is NOT too much because:
-1. The animation is subtle (opacity fade, not sliding)
-2. It's the same interaction everywhere (predictable)
-3. It only happens on hover (not constantly moving)
-4. It reinforces the gallery/exhibition aesthetic
+Add chevron to each menu item:
 
-The brackets become a **signature detail** — users learn "hover = brackets appear" and it feels intentional, not chaotic.
+```tsx
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+{sections.map((section) => (
+  <Link
+    key={section.key}
+    to={section.path}
+    className="menu-item"
+  >
+    <span>{section.label}</span>
+    <ChevronRight size={18} className="text-muted-foreground" />
+  </Link>
+))}
+```
+
+---
+
+## Mobile Interaction Summary
+
+| Element | Visual Affordance | Tap Feedback |
+|---------|-------------------|--------------|
+| Primary button | Solid black fill | Opacity 90% on active |
+| Text link | Underline | Underline thickens |
+| Menu items | Chevron (>) | Background tint on active |
+| Hotline | Underlined phone number | Standard link behavior |
+
+---
 
 ## Files to Modify
 
 | File | Changes |
 |------|---------|
-| `src/index.css` | Update `.menu-item` with bracket pseudo-elements |
+| `src/index.css` | Remove `.btn-hotline`, update `.menu-item` for flex + active state |
+| `src/pages/Index.tsx` | Move hotline to footer, simplify to text style |
+| `src/pages/ReviewRights.tsx` | Add `ChevronRight` to menu items |
 
