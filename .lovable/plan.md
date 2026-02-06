@@ -1,103 +1,49 @@
 
-# UI Improvements: Hero Image, Card Icons, and Home Page Simplification
+
+# Update Home Page Copy, Fix Button Text & Add Right to Refuse to Sign
 
 ## Overview
 
-This plan addresses four changes:
-1. Center the hero image on the home page
-2. Add a 5th rights row: "Right to Refuse to Sign" with document-slash icon
-3. Simplify home page action cards by removing icons
-4. Incorporate a hand-drawn brush script style font
+Three focused changes:
+1. Fix the "Prepare My Card" button text visibility (make it white)
+2. Update all home page copy with new structure
+3. Add "Right to Refuse to Sign" to the RightsPreview component
 
 ---
 
-## 1. Center Hero Image
+## 1. Fix Button Text Visibility
 
-**Current Issue**: The hero image uses `w-auto` which doesn't center it properly within the container.
+**Issue**: The h2 inside the primary button uses `text-headline` color (brick red) instead of inheriting `text-primary-foreground` (white).
 
-**Fix**: Add `mx-auto` to center the image horizontally.
-
-```text
-Before:  className="h-36 w-auto object-contain mb-6"
-After:   className="h-36 w-auto object-contain mb-6 mx-auto"
-```
+**Fix**: Add explicit `text-white` class to the h2 in the primary button.
 
 ---
 
-## 2. Add 5th Rights Row to Card
+## 2. Updated Home Page Copy Structure
 
-**New Right**: "RIGHT TO REFUSE TO SIGN"
-
-**Icon Design**: A document with a diagonal slash through it (linocut style, matching existing icons).
-
-```text
-+----------------------------------+
-|  [Doc Icon]  | RIGHT TO          |
-|   with X     | REFUSE TO SIGN    |
-+----------------------------------+
-```
-
-**Technical Details**:
-- Add new `NoSignIcon` component (56x56 SVG)
-- Document shape with bold slash-through
-- White on red background matching existing style
-- Add to `rights` array as 5th entry
-
-**Space Consideration**: With 5 rows at 88px each = 440px. Current card has space for this.
+| Element | Current | New |
+|---------|---------|-----|
+| Handwritten script | "stay prepared" | "know your rights" (uppercase) |
+| Headline | "Know Your Rights" | "STAY READY" |
+| Subhead | "Be prepared. Stay calm. Know your rights." | "Know what to say if ICE comes to your door, car, or workplace." |
+| Primary button title | "Prepare My Card" | "PREPARE MY CARD" |
+| Primary button description | "Create a digital rights card to save on your phone" | "Save a rights card to your phone" |
+| Secondary button title | "Review My Rights" | "REVIEW MY RIGHTS" |
+| Secondary button description | "Learn what to do in different situations" | "Learn what to do in different situations" (unchanged) |
+| Hotline label | "24/7 Hotline" | "REPORT ICE ACTIVITY" |
+| Hotline org | "United We Dream" | "United We Dream \| 1-844-363-1423" |
+| Hotline detail | phone number separately | "24/7" as badge/tag |
 
 ---
 
-## 3. Simplify Home Page Cards (Remove Icons)
+## 3. Add Right to Refuse to Sign
 
-**Current Design**:
-```text
-+----------------------------------+
-| [Icon]  Prepare My Card          |
-|         Description text         |
-+----------------------------------+
-```
-
-**New Design** (cleaner, text-focused):
-```text
-+----------------------------------+
-| Prepare My Card            [->]  |
-| Description text                 |
-+----------------------------------+
-```
-
-**Changes**:
-- Remove the `w-12 h-12` icon boxes from both action cards
-- Remove the icon from hotline box
-- Add a subtle arrow (ChevronRight) on the right side for the action cards
-- Simplify the layout to left-aligned text with arrow accent
-- Creates a cleaner, more modern look
-
----
-
-## 4. Hand-Drawn Brush Script Font
-
-**Inspiration**: The reference image shows an italic brush script ("STAY INFORMED") layered behind bold condensed text.
-
-**Font Options**:
-- **Caveat** - Popular Google font, casual handwritten style
-- **Permanent Marker** - Bold marker pen style
-- **Rock Salt** - Rough, hand-painted feel
-
-**Where to Use**:
-The hand-drawn style works best as an accent/decoration, not primary UI text:
-
-| Location | Usage |
-|----------|-------|
-| Home page headline | Behind "Know Your Rights" as subtle background text (like reference) |
-| Section dividers | Small accent phrases |
-| Card decorative element | Subtle "stay safe" or similar |
-
-**Recommended Approach**: 
-Add a brush script subtitle or decorative element behind the main headline, similar to the "STAY INFORMED" treatment in the reference image.
+Add a 5th entry to the RightsPreview component:
 
 ```text
-        stay prepared         <-- brush script, light gray, behind
-     KNOW YOUR RIGHTS         <-- Anton, bold, primary
+Title: Right to refuse to sign
+Description: Do not sign anything you don't understand. Signing certain documents can waive your rights.
+Quote: "I do not wish to sign anything without speaking to a lawyer."
 ```
 
 ---
@@ -106,84 +52,55 @@ Add a brush script subtitle or decorative element behind the main headline, simi
 
 | File | Changes |
 |------|---------|
-| `src/pages/Index.tsx` | Center hero image, remove icons from cards, add arrow accents, add brush script accent |
-| `src/components/RightsCard.tsx` | Add NoSignIcon and 5th rights row |
-| `index.html` | Add Caveat or similar brush font from Google Fonts |
+| `src/pages/Index.tsx` | Fix button text color, update all copy per new structure |
+| `src/components/RightsPreview.tsx` | Add 5th right: "Right to refuse to sign" |
 
 ---
 
-## Technical Implementation
+## Technical Details
 
-### New Icon (RightsCard.tsx)
+### Index.tsx Changes
 
+**Headline section**:
 ```tsx
-const NoSignIcon = () => (
-  <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-    {/* Document shape */}
-    <rect x="12" y="6" width="24" height="32" rx="2" fill="white"/>
-    <path d="M16 14H32" stroke="#B91C1C" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M16 22H28" stroke="#B91C1C" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M16 30H24" stroke="#B91C1C" strokeWidth="3" strokeLinecap="round"/>
-    {/* Bold X through document */}
-    <path d="M8 48L48 8" stroke="white" strokeWidth="6" strokeLinecap="round"/>
-  </svg>
-);
+<p style={{ fontFamily: 'Caveat, cursive' }}>
+  KNOW YOUR RIGHTS  {/* uppercase handwritten */}
+</p>
+<h1>STAY READY</h1>
+<p>Know what to say if ICE comes to your door, car, or workplace.</p>
 ```
 
-### Updated Rights Array
-
+**Primary button**:
 ```tsx
-const rights = [
-  { icon: DoorIcon, text: 'NO WARRANT,\nNO ENTRY' },
-  { icon: SilenceIcon, text: 'RIGHT TO\nSILENCE' },
-  { icon: HandIcon, text: 'NO SEARCH\nWITHOUT CONSENT' },
-  { icon: PhoneIcon, text: 'RIGHT TO\nA LAWYER' },
-  { icon: NoSignIcon, text: 'RIGHT TO\nREFUSE TO SIGN' },
-];
+<h2 className="text-lg font-bold text-white">PREPARE MY CARD</h2>
+<p>Save a rights card to your phone</p>
 ```
 
-### Home Page Action Cards (simplified)
-
+**Secondary button**:
 ```tsx
-<Link to="/prepare" className="block bg-primary text-primary-foreground rounded-2xl p-5">
-  <div className="flex items-center justify-between">
-    <div className="text-left">
-      <h2 className="text-lg font-bold">Prepare My Card</h2>
-      <p className="text-sm opacity-90">Create a digital rights card...</p>
-    </div>
-    <ChevronRight size={24} className="opacity-70" />
+<h2>REVIEW MY RIGHTS</h2>
+<p>Learn what to do in different situations</p>
+```
+
+**Hotline box** (restructured):
+```tsx
+<div className="bg-card rounded-2xl p-4 shadow-card">
+  <p className="text-xs font-bold text-headline uppercase">REPORT ICE ACTIVITY</p>
+  <div className="flex items-center justify-between mt-2">
+    <p>United We Dream | 1-844-363-1423</p>
+    <span className="bg-primary text-white text-xs px-2 py-1 rounded-full">24/7</span>
   </div>
-</Link>
+</div>
 ```
 
----
+### RightsPreview.tsx Changes
 
-## Visual Summary
-
-**Home Page Changes**:
-```text
-Before:                          After:
-+------------------------+       +------------------------+
-|     [Hero Image]       |       |     [Hero Image]       |
-|                        |       |     (centered)         |
-| KNOW YOUR RIGHTS       |       |    stay prepared       |
-|                        |       | KNOW YOUR RIGHTS       |
-+------------------------+       +------------------------+
-| [Icon] Prepare Card    |       | Prepare My Card    [>] |
-+------------------------+       +------------------------+
-| [Icon] Review Rights   |       | Review My Rights   [>] |
-+------------------------+       +------------------------+
+Add to the `rights` array:
+```tsx
+{
+  title: 'Right to refuse to sign',
+  description: 'Do not sign anything you don\'t understand. Signing certain documents can waive your rights.',
+  quote: '"I do not wish to sign anything without speaking to a lawyer."',
+}
 ```
 
-**Rights Card Changes**:
-```text
-+------------------------+
-| MY RIGHTS              |
-+------------------------+
-| [Door]  No Warrant...  |
-| [Lips]  Right to...    |
-| [Hand]  No Search...   |
-| [Phone] Right to...    |
-| [Doc X] Right to...    |  <-- NEW
-+------------------------+
-```
