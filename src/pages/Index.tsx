@@ -1,45 +1,37 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { PrivacyNotice } from '@/components/PrivacyNotice';
-
 export default function Index() {
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
+  return <div className="min-h-screen bg-background flex flex-col">
       {/* Main content */}
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-16">
         <div className="w-full max-w-md">
           {/* Headline with overlapping brush script accent */}
           <div className="mb-16">
-            <p 
-              className="text-5xl uppercase -mb-6 relative z-0"
-              style={{ fontFamily: 'Caveat, cursive', color: '#8A8A8A' }}
-            >
+            <p className="text-5xl uppercase -mb-6 relative z-0" style={{
+            fontFamily: 'Caveat, cursive',
+            color: '#8A8A8A'
+          }}>
               know your rights
             </p>
-            <h1 className="text-7xl tracking-wide text-headline mb-6 relative z-10">
+            <h1 className="tracking-wide text-headline mb-6 relative z-10 text-8xl">
               Stay Ready
             </h1>
-            <p className="text-foreground text-lg font-medium max-w-sm">
+            <p className="text-foreground text-lg font-medium max-w-sm font-sans">
               Know what to say if ICE comes to your door, car, or workplace.
             </p>
           </div>
 
           {/* Action buttons - minimal corner bracket style */}
           <div className="space-y-6 mb-16">
-            <Link
-              to="/prepare"
-              className="btn-bracket w-full text-center group"
-            >
+            <Link to="/prepare" className="btn-bracket w-full text-center group">
               <span className="flex items-center justify-center gap-3">
                 PREPARE MY CARD
                 <ArrowRight size={18} className="opacity-50 group-hover:translate-x-1 transition-transform" />
               </span>
             </Link>
 
-            <Link
-              to="/rights"
-              className="btn-text w-full text-center group flex items-center justify-center gap-2"
-            >
+            <Link to="/rights" className="btn-text w-full text-center group flex items-center justify-center gap-2">
               REVIEW MY RIGHTS
               <ArrowRight size={16} className="opacity-40 group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -52,10 +44,7 @@ export default function Index() {
             </p>
             <div className="flex items-baseline gap-3">
               <span className="text-sm font-medium text-muted-foreground">United We Dream</span>
-              <a
-                href="tel:1-844-363-1423"
-                className="text-hotline font-bold text-lg hover:opacity-80 transition-opacity"
-              >
+              <a href="tel:1-844-363-1423" className="text-hotline font-bold text-lg hover:opacity-80 transition-opacity">
                 1-844-363-1423
               </a>
               <span className="text-xs font-semibold text-muted-foreground">24/7</span>
@@ -75,6 +64,5 @@ export default function Index() {
           <PrivacyNotice />
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 }
