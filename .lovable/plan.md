@@ -1,33 +1,28 @@
 
-# Rights Card Hybrid Color Update
 
-Implement the hybrid approach: keep black icon boxes for maximum contrast and readability, but introduce brick red (`#B8352E`) for accent elements.
+# Icon Redesign: Bold Graphic Style with Human Figures
 
----
-
-## Color Changes
-
-| Element | Current | New |
-|---------|---------|-----|
-| Icon boxes | Black `#1A1A1A` | Black `#1A1A1A` (keep) |
-| Top bar | Black `#1A1A1A` | Brick Red `#B8352E` |
-| Status badge | Cream on black | Cream `#F5F2E8` on red |
-| "MY RIGHTS" headline | Black `#1A1A1A` | Brick Red `#B8352E` |
-| Rights strip borders | Black `#1A1A1A` | Brick Red `#B8352E` |
-| Calm bar | Black `#1A1A1A` | Brick Red `#B8352E` |
-| Hotline bar | Black `#1A1A1A` | Brick Red `#B8352E` |
+Redesign the four rights card icons to be more illustrative with human figures, thicker strokes, and brick red accent details.
 
 ---
 
-## Visual Result
+## New Icon Designs
 
-The card will have a warm, branded feel with:
-- **Black icon squares** for maximum pop and legibility
-- **Brick red accents** on header, footer bars, and text borders
-- **Cream background** stays the same
-- **Red headline** matches the app's visual identity
+| Icon | Current | New Design |
+|------|---------|------------|
+| No Warrant, No Entry | Simple door with X | Person behind door with hand up in "stop" gesture |
+| Right to Silence | Circle with lips | Person with finger over lips (shh gesture) |
+| No Search Without Consent | Basic palm | Two hands - one reaching, one blocking |
+| Right to a Lawyer | Phone handset | Person on phone or phone with speech bubble |
 
-This creates visual continuity with the app while keeping the icons highly readable as a crisis document.
+---
+
+## Visual Style
+
+- **Stroke weight**: Thick 3-4px main strokes
+- **Human elements**: Simplified figures with expressive gestures
+- **Color scheme**: White primary strokes + Brick Red (`#B8352E`) accent fills
+- **Background**: Keep black (`#1A1A1A`) boxes for maximum contrast
 
 ---
 
@@ -35,22 +30,42 @@ This creates visual continuity with the app while keeping the icons highly reada
 
 ### File: `src/components/RightsCard.tsx`
 
-**Line 81-86**: Change top bar background from `#1A1A1A` to `#B8352E`
+**Redesign DoorIcon (lines 21-27)**
+New design: Person silhouette behind door with raised palm
+- White stroke for door frame and person outline
+- Brick red fill for the "stop" palm gesture
 
-**Line 135**: Change "MY RIGHTS" headline color from `#1A1A1A` to `#B8352E`
+**Redesign SilenceIcon (lines 29-37)**
+New design: Face profile with finger over lips
+- White stroke for head outline
+- Brick red fill for the "shh" finger
 
-**Line 172**: Change rights strip border from `#1A1A1A` to `#B8352E`
+**Redesign HandIcon (lines 39-45)**
+New design: Two-hand scene - reaching hand blocked by stop palm
+- White stroke for both hands
+- Brick red fill for the blocking palm
 
-**Line 199**: Change calm bar background from `#1A1A1A` to `#B8352E`
-
-**Line 256**: Change hotline bar background from `#1A1A1A` to `#B8352E`
+**Redesign PhoneIcon (lines 47-52)**
+New design: Person holding phone with speech bubble
+- White stroke for figure and phone
+- Brick red fill for speech bubble (represents lawyer)
 
 ---
 
-## What Stays the Same
+## Icon Specifications
 
-- Icon box backgrounds stay **black** (`#1A1A1A`) for maximum contrast
-- Icon stroke colors stay **white** for visibility
-- Cream background (`#F5F2E8`) unchanged
-- All layout and sizing unchanged
-- Emergency contacts section unchanged
+Each icon will be:
+- 32x32 viewBox (same as current)
+- strokeWidth="3" for main elements
+- White (`#FFFFFF`) for primary strokes
+- Brick Red (`#B8352E`) for accent fills
+- Designed for legibility at 72x72px display size
+
+---
+
+## Files to Modify
+
+| File | Changes |
+|------|---------|
+| `src/components/RightsCard.tsx` | Replace all 4 SVG icon components with new illustrative designs |
+
