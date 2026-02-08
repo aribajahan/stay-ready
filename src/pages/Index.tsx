@@ -42,9 +42,7 @@ export default function Index() {
           <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
             Stay Ready Tips
           </h2>
-          <p className="text-sm text-muted-foreground mb-4">
-            Memorize a number · Record your statement · Talk to your family · Know your exits
-          </p>
+          <p className="text-sm text-muted-foreground mb-4">Memorize a number · Record your statement · Talk to your family · Know your exits  · Find a hotline</p>
           <Link to="/tips" className="text-sm font-semibold underline underline-offset-4 decoration-1 hover:decoration-2 transition-all">
             All tips →
           </Link>
@@ -54,7 +52,8 @@ export default function Index() {
       {/* Hotline Footer */}
       <footer className="px-6 border-t border-foreground/10 mt-auto py-[15px]">
         <div className="max-w-md mx-auto text-center">
-          <p className="text-sm text-muted-foreground mb-4">If you need help now, find your local hotline →</p>
+          <p className="text-sm text-muted-foreground mb-4">
+        </p>
           
           <h3 className="text-xs font-bold uppercase tracking-widest mb-2">
         </h3>
