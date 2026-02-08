@@ -1,329 +1,161 @@
 
+# Fix Card Content Display & Mobile Photo Download
 
-# Stay Ready App Update - Implementation Plan
+## Issues Identified
 
-## Overview
+### Issue 1: Document Number Not Displayed
+The `RightsCard` component receives `documentInfo.number` but never renders it. The card only shows the document type label, ignoring the optional document number field.
 
-This update adds significant new functionality to the existing Stay Ready application: audio statement downloads, "Help Your Community" section (6 pages), "Stay Ready Tips" section (7 pages), a new rights section, and homepage redesign with 3 paths.
+### Issue 2: Emergency Contacts Not Showing
+After tracing the data flow, the logic appears correct. The most likely cause is that the contacts data is being passed correctly, but the `html-to-image` library may have rendering issues with the card when it's scaled down in the preview. The contacts should render when data exists.
 
----
+However, there may be an issue where the user adds contacts but the state isn't being captured correctly, or the card preview isn't updating. Need to ensure the card ref captures the full content.
 
-## Summary of Changes
-
-| Area | Current | Updated |
-|------|---------|---------|
-| Homepage paths | 2 (Prepare, Review) | 3 (Prepare, Review, Community) |
-| Review My Rights sections | 9 | 10 (add "State Rights") |
-| New sections | - | Help Your Community (6 pages) |
-| New sections | - | Stay Ready Tips (7 pages) |
-| Download screen | Card image only | Card + Audio download |
-| Hotline section | Simple text link | Box with vCard download |
+### Issue 3: Mobile Photo Album Download
+The current download method creates a data URL and triggers an anchor click. On iOS/Android, this typically saves to Files, not Photos. To save directly to the photo album on mobile:
+- Use `navigator.share()` with a File object (already partially implemented)
+- On iOS, sharing an image file will prompt "Save Image" option
+- Fallback to standard download for unsupported browsers
 
 ---
 
-## Part 1: Homepage Redesign
+## Fixes
 
-### Current Layout
-```text
-PREPARE MY CARD (primary button)
-REVIEW MY RIGHTS (underlined link)
-```
+### Fix 1: Add Document Number to Card
 
-### New Layout
-```text
-PREPARE MY CARD (primary button)
-Save a rights card to your phone
+**File:** `src/components/RightsCard.tsx`
 
-REVIEW MY RIGHTS          HELP YOUR COMMUNITY
-Learn what to do          Support your neighbors
-(side-by-side underlined links)
-```
-
-### Hotline Box Addition
-New bordered box replacing current simple text:
-```text
-┌─────────────────────────────────────┐
-│  REPORT ICE ACTIVITY                │
-│  United We Dream                    │
-│  1-844-363-1423 (brick red) 24/7   │
-│  [Save to Contacts]                 │
-└─────────────────────────────────────┘
-```
-
-**Files to modify:**
-- `src/pages/Index.tsx` — Redesign layout with side-by-side links and hotline box
-
----
-
-## Part 2: Audio Download Feature
-
-### Audio File Setup
-- Create `public/audio/` directory
-- Add placeholder path: `/audio/rights-statement-en.mp3`
-
-### PrepareCard Download Screen Update
-Add audio download button below card download:
-```text
-[Download Card Image]
-[Download Audio Statement]
-Play this statement out loud when you need it.
-Set up a shortcut for one-tap access.
-
-How to set up one-tap audio →
-Review My Rights →
-Start Over
-```
-
-**Files to modify:**
-- `src/pages/PrepareCard.tsx` — Add audio download button and helper text
-
----
-
-## Part 3: Help Your Community Section
-
-### New Menu Page
-Route: `/community`
+Add the document number below the document type when provided:
 
 ```text
-← Home
+Current:
+┌────────────────────────┐
+│ DOCUMENT TYPE          │
+│ Green Card             │
+└────────────────────────┘
 
-Help Your Community
-
-You don't have to be directly affected to help.
-Here's how to support your neighbors.
-
-How to Be a Good Witness        →
-Your Rights as a Bystander      →
-What to Do If You See an Arrest →
-Prepare Your Family             →
-Rapid Response Networks         →
-Mutual Aid & Support            →
+Updated:
+┌────────────────────────┐
+│ DOCUMENT TYPE          │
+│ Green Card             │
+│ A-123456789           │  ← NEW (if number provided)
+└────────────────────────┘
 ```
 
-### New Content Pages (6 total)
-| Route | Page |
-|-------|------|
-| `/community` | Menu page |
-| `/community/witness` | How to Be a Good Witness |
-| `/community/bystander` | Your Rights as a Bystander |
-| `/community/arrest` | What to Do If You See an Arrest |
-| `/community/family` | Prepare Your Family |
-| `/community/rapid-response` | Rapid Response Networks |
-| `/community/mutual-aid` | Mutual Aid & Support |
-
-**Files to create:**
-- `src/pages/HelpCommunity.tsx` — Menu page
-- `src/pages/community/GoodWitness.tsx`
-- `src/pages/community/BystanderRights.tsx`
-- `src/pages/community/SeeArrest.tsx`
-- `src/pages/community/PrepareFamily.tsx`
-- `src/pages/community/RapidResponse.tsx`
-- `src/pages/community/MutualAid.tsx`
-
----
-
-## Part 4: Stay Ready Tips Section
-
-### New Menu Page
-Route: `/tips`
-
-```text
-← Home
-
-Stay Ready Tips
-
-Practical ways to prepare yourself and your family.
-These small steps can make a big difference.
-
-Set Up Your Lock Screen      →
-Set Up One-Tap Audio         →
-Emergency Text Shortcuts     →
-One-Tap Recording            →
-Location Sharing Setup       →
-Tracker Tips (AirTags)       →
-What to Tell Your Kids       →
+Add after line 85:
+```tsx
+{documentInfo.number && (
+  <p style={{ fontSize: '28px', opacity: 0.7, marginTop: '4px' }}>
+    {documentInfo.number}
+  </p>
+)}
 ```
 
-### New Content Pages (7 total)
-| Route | Page |
-|-------|------|
-| `/tips` | Menu page |
-| `/tips/lock-screen` | Set Up Your Lock Screen |
-| `/tips/audio-shortcut` | Set Up One-Tap Audio |
-| `/tips/emergency-text` | Emergency Text Shortcuts |
-| `/tips/recording` | One-Tap Recording |
-| `/tips/location-sharing` | Location Sharing Setup |
-| `/tips/trackers` | Tracker Tips (AirTags) |
-| `/tips/kids` | What to Tell Your Kids |
-
-**Files to create:**
-- `src/pages/StayReadyTips.tsx` — Menu page
-- `src/pages/tips/LockScreen.tsx`
-- `src/pages/tips/AudioShortcut.tsx`
-- `src/pages/tips/EmergencyText.tsx`
-- `src/pages/tips/Recording.tsx`
-- `src/pages/tips/LocationSharing.tsx`
-- `src/pages/tips/Trackers.tsx`
-- `src/pages/tips/Kids.tsx`
-
 ---
 
-## Part 5: Review My Rights Update
+### Fix 2: Improve Mobile Download for Photo Album
 
-### Add New Section
-Add "Do Rights Change by State?" as 9th section (before Hotlines)
+**File:** `src/pages/PrepareCard.tsx`
 
-| # | Section |
-|---|---------|
-| 1 | Your Universal Rights |
-| 2 | ICE at Your Door |
-| 3 | Stopped in Your Car |
-| 4 | Stopped on the Street |
-| 5 | ICE at Your Workplace |
-| 6 | Warrants: Know the Difference |
-| 7 | What to Carry |
-| 8 | Report and Record |
-| 9 | Do Rights Change by State? ← NEW |
-| 10 | Hotlines & Resources |
-
-**Files to modify:**
-- `src/pages/ReviewRights.tsx` — Add new section to menu
-- **File to create:** `src/pages/rights/StateRights.tsx`
-
----
-
-## Part 6: vCard Download Utility
-
-Create utility for downloading United We Dream contact as .vcf file.
+Update the `saveCard` function to:
+1. Check if Web Share API is available and supports files
+2. If yes, use `navigator.share()` with the image file (iOS will show "Save Image" option)
+3. If no, fall back to standard download
 
 ```typescript
-// src/lib/vcard.ts
-export function downloadVCard(name: string, phone: string, org: string) {
-  const vcard = `BEGIN:VCARD
-VERSION:3.0
-FN:${name}
-TEL:${phone}
-ORG:${org}
-END:VCARD`;
-  
-  const blob = new Blob([vcard], { type: 'text/vcard' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `${name.replace(/\s+/g, '-')}.vcf`;
-  link.click();
-  URL.revokeObjectURL(url);
-}
-```
+const saveCard = async () => {
+  if (!cardRef.current) return;
 
-**Files to create:**
-- `src/lib/vcard.ts`
+  try {
+    const dataUrl = await toPng(cardRef.current, {
+      quality: 1,
+      pixelRatio: 2,
+    });
 
----
+    // Convert to blob/file for sharing
+    const response = await fetch(dataUrl);
+    const blob = await response.blob();
+    const file = new File([blob], 'know-your-rights-card.png', { 
+      type: 'image/png' 
+    });
 
-## Part 7: Routing Updates
-
-### New Routes to Add
-```text
-/community               → HelpCommunity menu
-/community/witness       → GoodWitness
-/community/bystander     → BystanderRights
-/community/arrest        → SeeArrest
-/community/family        → PrepareFamily
-/community/rapid-response → RapidResponse
-/community/mutual-aid    → MutualAid
-
-/tips                    → StayReadyTips menu
-/tips/lock-screen        → LockScreen
-/tips/audio-shortcut     → AudioShortcut
-/tips/emergency-text     → EmergencyText
-/tips/recording          → Recording
-/tips/location-sharing   → LocationSharing
-/tips/trackers           → Trackers
-/tips/kids               → Kids
-
-/rights/state            → StateRights
-```
-
-**Files to modify:**
-- `src/App.tsx` — Add all new routes and imports
-
----
-
-## Part 8: Update Hotlines Page
-
-Add vCard download button and additional resources.
-
-**Files to modify:**
-- `src/pages/rights/Hotlines.tsx` — Add "Save to Contacts" button, add ICE Detainee Locator, CLINIC directory
-
----
-
-## File Summary
-
-### Files to Create (17 new files)
-```text
-public/audio/.gitkeep                    (placeholder for audio)
-src/lib/vcard.ts                         (vCard utility)
-src/pages/HelpCommunity.tsx              (menu)
-src/pages/community/GoodWitness.tsx
-src/pages/community/BystanderRights.tsx
-src/pages/community/SeeArrest.tsx
-src/pages/community/PrepareFamily.tsx
-src/pages/community/RapidResponse.tsx
-src/pages/community/MutualAid.tsx
-src/pages/StayReadyTips.tsx              (menu)
-src/pages/tips/LockScreen.tsx
-src/pages/tips/AudioShortcut.tsx
-src/pages/tips/EmergencyText.tsx
-src/pages/tips/Recording.tsx
-src/pages/tips/LocationSharing.tsx
-src/pages/tips/Trackers.tsx
-src/pages/tips/Kids.tsx
-src/pages/rights/StateRights.tsx
-```
-
-### Files to Modify (5 files)
-```text
-src/App.tsx                  (add routes)
-src/pages/Index.tsx          (homepage redesign)
-src/pages/PrepareCard.tsx    (audio download)
-src/pages/ReviewRights.tsx   (add state section)
-src/pages/rights/Hotlines.tsx (vCard, resources)
+    // Try Web Share API first (works better on mobile for Photos)
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        title: 'Know Your Rights Card',
+      });
+      toast.success('Card shared successfully!');
+    } else {
+      // Fallback: standard download
+      const link = document.createElement('a');
+      link.download = 'know-your-rights-card.png';
+      link.href = dataUrl;
+      link.click();
+      toast.success('Card saved to your device!');
+    }
+  } catch (error) {
+    // Handle user cancellation gracefully
+    if ((error as Error).name === 'AbortError') {
+      return; // User cancelled, no error message needed
+    }
+    console.error('Failed to save card:', error);
+    toast.error('Failed to save card. Please try again.');
+  }
+};
 ```
 
 ---
 
-## Implementation Order
+### Fix 3: Ensure Card Renders Off-Screen for Capture
 
-Given the scope, I recommend implementing in phases:
+The card is currently rendered inside a scaled-down preview container. The `html-to-image` library should capture the full-size card, but the transform scaling might cause issues.
 
-**Phase 1: Core Updates**
-1. Homepage redesign with 3 paths
-2. vCard utility
-3. Audio download on PrepareCard
+**File:** `src/pages/PrepareCard.tsx`
 
-**Phase 2: Help Your Community**
-4. Menu page + 6 content pages
-5. Route updates
+Add a hidden full-size card for image capture, separate from the preview:
 
-**Phase 3: Stay Ready Tips**
-6. Menu page + 7 content pages
-7. Route updates
+```tsx
+{/* Hidden card for image generation - positioned off-screen */}
+<div 
+  style={{
+    position: 'absolute',
+    left: '-9999px',
+    top: 0,
+  }}
+>
+  <RightsCard 
+    ref={cardRef} 
+    status={status} 
+    documentInfo={documentInfo} 
+    contacts={contacts} 
+  />
+</div>
 
-**Phase 4: Rights Updates**
-8. StateRights page
-9. Hotlines page updates
-10. Final routing
+{/* Visible preview (scaled) */}
+<div style={{ transform: 'scale(0.152)', ... }}>
+  <RightsCard status={status} documentInfo={documentInfo} contacts={contacts} />
+</div>
+```
+
+This ensures:
+- The preview shows a scaled version for visual feedback
+- The capture ref points to a full-size, unscaled version
+- No transform interference with `html-to-image`
+
+---
+
+## Files to Modify
+
+| File | Changes |
+|------|---------|
+| `src/components/RightsCard.tsx` | Add document number display |
+| `src/pages/PrepareCard.tsx` | Mobile-friendly download + separate capture element |
 
 ---
 
 ## Technical Notes
 
-- All new pages use existing `InfoPageLayout` component
-- All content follows existing callout styling (`.callout-minimal`)
-- vCard download uses native Blob API (no dependencies)
-- Audio download uses standard anchor download attribute
-- No backend required — everything client-side
-- Mobile-first styling using existing Tailwind classes
-
+- **Web Share API**: Supported on iOS Safari 15+, Chrome for Android 61+. On iOS, sharing an image file presents "Save Image" option which saves to Photos.
+- **`html-to-image`**: Works best on unscaled, visible elements. Using `position: absolute; left: -9999px` keeps element in DOM but off-screen.
+- **User cancellation**: When user dismisses share sheet, it throws an `AbortError` which we handle silently.
