@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate, Link } from 'react-router-dom';
 import { toPng } from 'html-to-image';
 import { StatusSelector } from '@/components/StatusSelector';
@@ -46,6 +47,12 @@ export default function PrepareCard() {
   };
 
   const goNext = () => {
+    // Debug: trace current state
+    console.log('[goNext] Step:', step);
+    console.log('[goNext] documentInfo:', documentInfo);
+    console.log('[goNext] Current contacts:', contacts);
+    console.log('[goNext] Pending contact:', { pendingContactName, pendingContactPhone });
+    
     // Auto-save pending contact data when leaving contacts step
     if (step === 'contacts' && pendingContactName.trim() && pendingContactPhone.trim()) {
       if (isValidPhone(pendingContactPhone.trim()) && contacts.length < 3) {
@@ -54,7 +61,13 @@ export default function PrepareCard() {
           name: pendingContactName.trim(),
           phone: formatPhoneDisplay(pendingContactPhone.trim()),
         };
-        setContacts(prev => [...prev, newContact]);
+        
+        // Use flushSync to force synchronous state update before navigation
+        flushSync(() => {
+          setContacts(prev => [...prev, newContact]);
+        });
+        
+        console.log('[goNext] Added contact:', newContact);
         setPendingContactName('');
         setPendingContactPhone('');
       }
@@ -62,6 +75,7 @@ export default function PrepareCard() {
     
     const nextIndex = currentStepIndex + 1;
     if (nextIndex < steps.length) {
+      console.log('[goNext] Navigating to step:', steps[nextIndex]);
       setStep(steps[nextIndex]);
     }
   };
