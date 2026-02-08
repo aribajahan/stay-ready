@@ -1,11 +1,8 @@
 import { Link } from 'react-router-dom';
 import { PrivacyNotice } from '@/components/PrivacyNotice';
 import { FocusFrameCard } from '@/components/FocusFrameCard';
-import { downloadVCard } from '@/lib/vcard';
+
 export default function Index() {
-  const handleSaveContact = () => {
-    downloadVCard('United We Dream Hotline', '1-844-363-1423', 'United We Dream');
-  };
   return <div className="min-h-screen bg-background flex flex-col">
       {/* Hero Section - Compact mobile-first */}
       <section className="flex flex-col items-center justify-center px-6 pt-12 pb-8">
@@ -49,34 +46,16 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Hotline Footer */}
-      <footer className="px-6 border-t border-foreground/10 mt-auto py-[15px]">
-        <div className="max-w-md mx-auto text-center">
-          <p className="text-sm text-muted-foreground mb-4">
-        </p>
-          
-          <h3 className="text-xs font-bold uppercase tracking-widest mb-2">
-        </h3>
-          
-          <a href="tel:1-844-363-1423" className="text-hotline font-bold block mb-2 text-lg">
-        </a>
-          
-          <p className="text-xs text-muted-foreground mb-4">
-        </p>
-          
-          <button onClick={handleSaveContact} className="text-sm font-semibold underline underline-offset-4 decoration-1 hover:decoration-2 transition-all mb-8">
-            Save to Contacts
-          </button>
-
-          <div className="pt-6 border-t border-foreground/10 space-y-2 py-0">
-            <p className="text-xs text-muted-foreground">
-              This is not legal advice.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Built with love for our communities.
-            </p>
-            <PrivacyNotice />
-          </div>
+      {/* Footer */}
+      <footer className="px-6 border-t border-foreground/10 py-6">
+        <div className="max-w-md mx-auto text-center space-y-2">
+          <p className="text-xs text-muted-foreground">
+            This is not legal advice.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Built with love for our communities.
+          </p>
+          <PrivacyNotice />
         </div>
       </footer>
     </div>;
