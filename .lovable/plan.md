@@ -1,223 +1,152 @@
 
 
-# Fix Long List Pages: Simple List Treatment
+# Typography & Spacing Refinements
 
-## Problem Summary
+## Summary
 
-When you have 6-10+ items all with corner brackets, the page becomes visually exhausting and hard to scan. The corner brackets lose their "special" feel when repeated many times.
-
-**Current state:**
-- Homepage (3 items): Corner brackets
-- Review My Rights (10 items): Corner brackets (too many)
-- Help Your Community (6 items): Corner brackets (too many)
-- Stay Ready Tips (7 items): Corner brackets (too many)
-- Status selector (6 options): Corner brackets (too many)
+Polish the editorial design by establishing proper visual hierarchy: page titles stay bold and commanding, section headers become quieter labels, body text becomes lighter and more readable, and spacing tightens for a denser, magazine-like feel.
 
 ---
 
-## The Rule
+## Changes Overview
 
-| Context | Treatment |
-|---------|-----------|
-| Homepage (3 primary paths) | Corner brackets (keep special) |
-| Section index pages (6+ items) | Simple list with arrows |
-| Card builder status options | Simple list with arrows |
+| Element | Current | After |
+|---------|---------|-------|
+| Body/paragraph text | `font-semibold` (600) | `font-normal` (400) |
+| Section headers (h2) | Anton font, bold condensed | DM Sans, semibold, smaller, letterspaced |
+| Section spacing | `mb-6` (24px) | `mb-4` (16px) |
+| Paragraph spacing | `mb-3` (12px) | `mb-2` (8px) |
+| List item spacing | `space-y-2` (8px) | `space-y-1.5` (6px) |
+| Bullets | 6px squares | 4px dots, muted color |
 
 ---
 
-## New Component: NavList
-
-Create a new reusable component for long lists that provides:
-
-- Full-width tap targets with generous padding (16-20px vertical)
-- Bold condensed uppercase text + arrow on right
-- Tap feedback: background fills black, text inverts to cream
-- Slight scale down on press (98%)
-- Tighter spacing between items (no gaps, just the items stacked)
+## Visual Hierarchy (Before → After)
 
 ```text
-Layout structure:
-┌─────────────────────────────────────────┐
-│ UNIVERSAL RIGHTS                      → │
-├─────────────────────────────────────────┤
-│ AT YOUR DOOR                          → │
-├─────────────────────────────────────────┤
-│ IN YOUR CAR                           → │
-└─────────────────────────────────────────┘
+BEFORE:
+┌──────────────────────────────────┐
+│ YOUR UNIVERSAL                   │ ← Page title (Anton, bold)
+│ RIGHTS                           │
+│                                  │
+│ THE RIGHT TO REMAIN SILENT       │ ← Section h2 (also Anton, bold - TOO HEAVY)
+│                                  │
+│ You do not have to answer...     │ ← Body (semibold - too heavy)
+│                                  │
+│ ■ List item one                  │ ← 6px square bullet
+│                                  │
+│ ■ List item two                  │
+└──────────────────────────────────┘
+
+AFTER:
+┌──────────────────────────────────┐
+│ YOUR UNIVERSAL                   │ ← Page title (Anton, bold - UNCHANGED)
+│ RIGHTS                           │
+│                                  │
+│ THE RIGHT TO REMAIN SILENT       │ ← Section h2 (DM Sans, semibold, smaller)
+│                                  │
+│ You do not have to answer...     │ ← Body (regular weight - lighter)
+│                                  │
+│ • List item one                  │ ← 4px dot, muted
+│ • List item two                  │
+└──────────────────────────────────┘
 ```
+
+The page title still commands attention. Section headers organize content without competing. Body text is easy to read.
 
 ---
 
-## Visual Comparison
+## File Changes
 
-### Before (Review My Rights)
-```text
-← Home
+### `src/index.css`
 
-REVIEW
-MY RIGHTS
-
-──────────────────────────
-
-┌╴ UNIVERSAL RIGHTS    → ╶┐
-└╴                      ╶┘
-
-┌╴ AT YOUR DOOR        → ╶┐
-└╴                      ╶┘
-
-┌╴ IN YOUR CAR         → ╶┐
-└╴                      ╶┘
-          ... (10 items with brackets)
-```
-
-### After (Review My Rights)
-```text
-← Home
-
-REVIEW
-MY RIGHTS
-
-──────────────────────────
-
-UNIVERSAL RIGHTS            →
-
-AT YOUR DOOR                →
-
-IN YOUR CAR                 →
-
-ON THE STREET               →
-
-AT WORK                     →
-
-WARRANTS                    →
-          ... (clean, scannable)
-
-──────────────────────────
-```
-
----
-
-## CSS Changes
-
-Add new `.nav-list` and `.nav-list-item` styles to `src/index.css`:
+**1. Change body text weight from semibold to normal**
 
 ```css
-/* NAV LIST - Simple list for long menus */
-.nav-list {
-  @apply divide-y divide-foreground/10;
-  border-top: 1px solid hsl(var(--border));
-  border-bottom: 1px solid hsl(var(--border));
+/* Line 102-106: Change body weight */
+body {
+  @apply bg-background text-foreground font-normal;  /* was font-semibold */
+  font-family: 'DM Sans', system-ui, sans-serif;
+  position: relative;
 }
 
-.nav-list-item {
-  @apply flex items-center justify-between w-full py-4 px-1;
-  @apply text-left;
-  font-family: 'Anton', sans-serif;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  transition: all 150ms ease-out;
-}
-
-.nav-list-item:active {
-  @apply scale-[0.98];
-  background-color: hsl(var(--foreground));
-  color: hsl(var(--background));
-}
-
-.nav-list-item:active .nav-list-arrow {
-  color: hsl(var(--background));
+/* Line 137-139: Change p, span, li weight */
+p, span, li, label {
+  @apply font-normal;  /* was font-semibold */
 }
 ```
 
----
+**2. Override section headers in info-content to use DM Sans**
 
-## Component Changes
-
-### New Component: `src/components/NavListItem.tsx`
-
-A simple list item component for long navigation lists:
-
-```tsx
-interface NavListItemProps {
-  to: string;
-  label: string;
-  onClick?: () => void;
-}
-
-export function NavListItem({ to, label, onClick }: NavListItemProps) {
-  return (
-    <Link to={to} className="nav-list-item" onClick={onClick}>
-      <span>{label}</span>
-      <span className="nav-list-arrow">→</span>
-    </Link>
-  );
-}
-
-// Button variant for status selection
-interface NavListOptionProps {
-  label: string;
-  onClick: () => void;
-  isSelected?: boolean;
-}
-
-export function NavListOption({ label, onClick, isSelected }: NavListOptionProps) {
-  // Similar styling, button instead of Link
+```css
+/* Line 340-343: Update .info-content h2 */
+.info-content h2 {
+  font-family: 'DM Sans', sans-serif;  /* Override Anton inheritance */
+  @apply text-sm font-semibold uppercase tracking-widest mb-2 mt-4 first:mt-0;
+  color: hsl(var(--headline));
 }
 ```
 
----
+**3. Tighten spacing in info-content**
 
-## Page Updates
+```css
+/* Line 345-347: Reduce paragraph margin */
+.info-content p {
+  @apply text-base leading-relaxed mb-2;  /* was mb-3 */
+}
 
-### 1. `src/pages/ReviewRights.tsx`
-Replace `FocusFrameCard` with `NavListItem`, wrap in `.nav-list` container.
+/* Line 349-351: Reduce list spacing */
+.info-content ul {
+  @apply space-y-1.5 mb-3;  /* was space-y-2 mb-4 */
+}
 
-### 2. `src/pages/HelpCommunity.tsx`
-Replace `FocusFrameCard` with `NavListItem`, wrap in `.nav-list` container.
+/* Line 357-359: Reduce section margin */
+.info-content section {
+  @apply mb-4;  /* was mb-6 */
+}
+```
 
-### 3. `src/pages/StayReadyTips.tsx`
-Replace `FocusFrameCard` with `NavListItem`, wrap in `.nav-list` container.
+**4. Update section-header styling**
 
-### 4. `src/components/StatusSelector.tsx`
-Replace `FocusFrameOption` with `NavListOption`, wrap in `.nav-list` container.
+```css
+/* Line 327-334: Refine .section-header */
+.section-header {
+  @apply py-2 mt-4 first:mt-0;  /* Remove borders, add top margin */
+}
 
-### 5. `src/pages/Index.tsx`
-Keep `FocusFrameCard` (only 3 items — brackets stay special here).
+.section-header h2 {
+  font-family: 'DM Sans', sans-serif;  /* Override Anton */
+  @apply text-xs font-semibold uppercase tracking-widest m-0;
+  color: hsl(var(--muted-foreground));
+}
+```
 
----
+**5. Keep buttons and critical UI elements bold**
 
-## Files to Create/Modify
-
-| File | Action |
-|------|--------|
-| `src/components/NavListItem.tsx` | **Create** - New simple list components |
-| `src/index.css` | **Modify** - Add `.nav-list` and `.nav-list-item` styles |
-| `src/pages/ReviewRights.tsx` | **Modify** - Use `NavListItem` instead of `FocusFrameCard` |
-| `src/pages/HelpCommunity.tsx` | **Modify** - Use `NavListItem` instead of `FocusFrameCard` |
-| `src/pages/StayReadyTips.tsx` | **Modify** - Use `NavListItem` instead of `FocusFrameCard` |
-| `src/components/StatusSelector.tsx` | **Modify** - Use `NavListOption` instead of `FocusFrameOption` |
-
----
-
-## Tap Animation Details
-
-The interaction feels premium even without brackets:
-
-**On press:**
-- Background fills black (full width)
-- Text inverts to cream
-- Arrow inverts to cream
-- Slight scale down (98%)
-
-**On release:**
-- Navigate with existing page slide transition
-
-This maintains the satisfying tactile feedback while removing visual clutter.
+The `button` rule stays `font-bold`. The `.btn-primary` and `.btn-link` stay as-is.
 
 ---
 
-## Optional: Subtle Separators
+## What Stays The Same
 
-The design will use very light dividers between items via `divide-y divide-foreground/10`. This creates visual separation without adding heaviness. The outer borders (top and bottom of the list) are slightly more visible using `border-foreground/20`.
+- **Page titles** (`headline-stacked`, `headline-page`): Still use Anton font, bold condensed
+- **Navigation list items** (`.nav-list-item`): Still use Anton for that bold nav feel
+- **Phrase boxes**: Keep `font-medium` for the critical "what to say" text
+- **Buttons**: Stay `font-bold`
+
+---
+
+## Technical Notes
+
+- The base `h1, h2, h3` rule sets `font-family: 'Anton'` globally
+- We override this specifically for `.info-content h2` and `.section-header h2` to use DM Sans
+- This creates the hierarchy: Anton for titles/nav, DM Sans for section labels and body
+
+---
+
+## Files Modified
+
+| File | Changes |
+|------|---------|
+| `src/index.css` | Update font weights, section header styling, and spacing values |
 
