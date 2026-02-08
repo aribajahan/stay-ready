@@ -100,7 +100,7 @@
   }
   
   body {
-    @apply bg-background text-foreground font-semibold;
+    @apply bg-background text-foreground font-normal;
     font-family: 'DM Sans', system-ui, sans-serif;
     position: relative;
   }
@@ -135,7 +135,7 @@
   }
   
   p, span, li, label {
-    @apply font-semibold;
+    @apply font-normal;
   }
   
   button {
@@ -325,11 +325,12 @@
   }
 
   .section-header {
-    @apply py-3 border-y border-foreground/20;
+    @apply py-2 mt-4 first:mt-0;
   }
 
   .section-header h2 {
-    @apply text-xs font-bold uppercase tracking-widest m-0;
+    font-family: 'DM Sans', sans-serif;
+    @apply text-xs font-semibold uppercase tracking-widest m-0;
     color: hsl(var(--muted-foreground));
   }
 
@@ -338,16 +339,17 @@
      ======================================== */
 
   .info-content h2 {
-    @apply text-lg font-semibold mb-2 mt-6 first:mt-0;
+    font-family: 'DM Sans', sans-serif;
+    @apply text-sm font-semibold uppercase tracking-widest mb-2 mt-4 first:mt-0;
     color: hsl(var(--headline));
   }
 
   .info-content p {
-    @apply text-base leading-relaxed mb-3;
+    @apply text-base leading-relaxed mb-2;
   }
 
   .info-content ul {
-    @apply space-y-2 mb-4;
+    @apply space-y-1.5 mb-3;
   }
 
   .info-content li {
@@ -355,7 +357,7 @@
   }
   
   .info-content section {
-    @apply mb-6;
+    @apply mb-4;
   }
 
   /* ========================================
