@@ -63,13 +63,33 @@ export default function PrepareCard() {
         pixelRatio: 2,
       });
 
-      const link = document.createElement('a');
-      link.download = 'know-your-rights-card.png';
-      link.href = dataUrl;
-      link.click();
+      // Convert to blob/file for sharing
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], 'know-your-rights-card.png', { 
+        type: 'image/png' 
+      });
 
-      toast.success('Card saved to your device!');
+      // Try Web Share API first (works better on mobile for Photos)
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Know Your Rights Card',
+        });
+        toast.success('Card shared successfully!');
+      } else {
+        // Fallback: standard download
+        const link = document.createElement('a');
+        link.download = 'know-your-rights-card.png';
+        link.href = dataUrl;
+        link.click();
+        toast.success('Card saved to your device!');
+      }
     } catch (error) {
+      // Handle user cancellation gracefully
+      if ((error as Error).name === 'AbortError') {
+        return; // User cancelled, no error message needed
+      }
       console.error('Failed to save card:', error);
       toast.error('Failed to save card. Please try again.');
     }
@@ -133,6 +153,22 @@ export default function PrepareCard() {
       case 'card':
         return (
           <div className="flex flex-col items-center gap-6">
+            {/* Hidden card for image generation - positioned off-screen */}
+            <div 
+              style={{
+                position: 'absolute',
+                left: '-9999px',
+                top: 0,
+              }}
+            >
+              <RightsCard 
+                ref={cardRef} 
+                status={status} 
+                documentInfo={documentInfo} 
+                contacts={contacts} 
+              />
+            </div>
+
             {/* Phone mockup container */}
             <div className="relative">
               {/* Phone frame */}
@@ -163,7 +199,7 @@ export default function PrepareCard() {
                       height: '2400px',
                     }}
                   >
-                    <RightsCard ref={cardRef} status={status} documentInfo={documentInfo} contacts={contacts} />
+                    <RightsCard status={status} documentInfo={documentInfo} contacts={contacts} />
                   </div>
                 </div>
                 {/* Notch/dynamic island */}

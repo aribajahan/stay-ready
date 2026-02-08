@@ -83,6 +83,11 @@ export const RightsCard = forwardRef<HTMLDivElement, RightsCardProps>(
                   <p style={{ fontSize: '36px', fontWeight: 600 }}>
                     {documentLabels[documentInfo.type!]}
                   </p>
+                  {documentInfo.number && (
+                    <p style={{ fontSize: '28px', opacity: 0.7, marginTop: '4px' }}>
+                      {documentInfo.number}
+                    </p>
+                  )}
                 </>
               )}
             </div>
