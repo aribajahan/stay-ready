@@ -1,548 +1,171 @@
 
 
-# Stay Ready — Design Overhaul Implementation Plan
+# Mobile-First Homepage + Tighter Content Spacing
 
-## The Vision
+## Problems Identified
 
-Transform from a "nice nonprofit template" into something that feels like **Bloomberg Businessweek meets emergency broadcast**. Editorial brutalism with purpose. Every design choice communicates: "This matters. Someone gave a shit."
+### 1. Homepage - Not Mobile-First
+The current `min-h-screen` hero forces users to scroll past an entire viewport just to see navigation. On mobile, this buries the three main paths completely.
 
----
-
-## Summary of Changes
-
-| Element | Current | Updated |
-|---------|---------|---------|
-| Homepage hero | "know your rights" overlay + tagline | Giant stacked "STAY / READY" fills viewport |
-| Navigation | Button hierarchy (primary/secondary) | Three equal Focus Frame cards |
-| Background | Flat cream | Subtle paper grain texture |
-| Typography | Standard headings | Stacked words, massive scale, tight tracking |
-| Phrase callouts | Small italic with left border | Giant pull-quote boxes with full borders |
-| Section headers | Standard h2 | Stacked words with thin rules |
-| Tap interaction | Simple color change | Brackets complete + invert + scale + slide transition |
-| Page transitions | Fade in | Slide left/right (250ms) |
-| Status options | Includes "Undocumented" | Removed; use "Prefer not to say" |
+### 2. Content Pages - Too Much Spacing
+Multiple spacing issues make pages feel stretched and AI-generated:
+- `.info-content space-y-6` adds 24px between every child element
+- `.section-header my-6` adds 24px margins above AND below section headers
+- `.section-divider mb-8` adds 32px after title divider
+- `.phrase-box my-6` adds 24px above AND below each box
+- `<section> mb-8` adds 32px after each section
+- Combined: massive cumulative gaps between every element
 
 ---
 
-## Part 1: Core Design System Updates
+## Fixes
 
-### 1.1 Typography Scale
-
-**File:** `src/index.css`
-
-Add new typography utilities for the brutalist editorial style:
-
-```css
-/* Stacked headline - words stack vertically */
-.headline-stacked {
-  font-family: 'Anton', sans-serif;
-  text-transform: uppercase;
-  line-height: 0.85;
-  letter-spacing: -0.02em;
-}
-
-/* Hero scale - fills viewport */
-.headline-hero {
-  font-size: clamp(4rem, 20vw, 12rem);
-}
-
-/* Section scale - large but not hero */
-.headline-section {
-  font-size: clamp(2rem, 10vw, 4rem);
-}
-
-/* Page title scale */
-.headline-page {
-  font-size: clamp(2.5rem, 12vw, 5rem);
-}
-```
-
-### 1.2 Paper Texture Background
-
-**File:** `src/index.css`
-
-Add subtle grain texture to body:
-
-```css
-body {
-  @apply bg-background text-foreground font-semibold;
-  font-family: 'DM Sans', system-ui, sans-serif;
-  position: relative;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.03;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
-  z-index: -1;
-}
-```
-
-### 1.3 Color Refinement
-
-Update hotline color to the specified red:
-
-```css
---hotline: 350 70% 45%; /* #C41E3A */
-```
-
----
-
-## Part 2: Focus Frame Card Component
-
-**New file:** `src/components/FocusFrameCard.tsx`
-
-### Visual States
-
-**Resting state:**
-```text
-┌                                           ┐
-
-  PREPARE MY CARD                        →
-  Lock screen ready
-
-└                                           ┘
-```
-
-**Pressed state (150ms):**
-```text
-┌─────────────────────────────────────────┐
-│                                         │
-│  PREPARE MY CARD                     → │
-│  Lock screen ready                      │
-│                                         │
-└─────────────────────────────────────────┘
-```
-- Background: fills black
-- Text: inverts to cream
-- Corners: slide inward and connect
-- Scale: 98%
-
-### Corner Bracket Styling
-- Line weight: 2px
-- Arm length: 32px
-- Pure black (#1A1A1A)
-- Positioned using `absolute` with borders
-
-### Component Interface
-```typescript
-interface FocusFrameCardProps {
-  to: string;
-  headline: string;
-  subhead: string;
-  className?: string;
-}
-```
-
-### Animation Details
-- Transition: `all 150ms ease-out`
-- On press: corners animate from 32px arms to full width/height
-- Transform: `scale(0.98)` on active
-- Background: `bg-foreground` (black)
-- Text: `text-background` (cream)
-
----
-
-## Part 3: Homepage Redesign
+### Fix 1: Mobile-First Homepage Layout
 
 **File:** `src/pages/Index.tsx`
 
-### Layout Structure
+Change from full-viewport hero to a compact header with navigation visible immediately:
 
 ```text
-┌─────────────────────────────────────────┐
-│                                         │
-│              STAY                       │
-│              READY                      │
-│                                         │
-│         [subtle ↓ indicator]            │
-│                                         │
-├─────────────────────────────────────────┤
-│                                         │
-│  ┌                              ┐       │
-│    PREPARE MY CARD           →          │
-│    Lock screen ready                    │
-│  └                              ┘       │
-│                                         │
-│  ┌                              ┐       │
-│    REVIEW MY RIGHTS          →          │
-│    Door / Car / Street / Work           │
-│  └                              ┘       │
-│                                         │
-│  ┌                              ┐       │
-│    HELP YOUR COMMUNITY       →          │
-│    Witness / Support / Prepare          │
-│  └                              ┘       │
-│                                         │
-├─────────────────────────────────────────┤
-│  STAY READY TIPS                        │
-│  Memorize a number · Record your        │
-│  statement · Talk to your family        │
-│                                         │
-│  All tips →                             │
-├─────────────────────────────────────────┤
-│  If you need help now:                  │
-│                                         │
-│  UNITED WE DREAM HOTLINE                │
-│  1-844-363-1423 (red)                   │
-│  24/7 — Free — Confidential             │
-│                                         │
-│  [Save to Contacts]                     │
-├─────────────────────────────────────────┤
-│  This is not legal advice.              │
-│  Built with love for our communities.   │
-└─────────────────────────────────────────┘
+CURRENT                          UPDATED
+┌─────────────────┐              ┌─────────────────┐
+│                 │              │     STAY        │
+│      STAY       │              │     READY       │
+│      READY      │ (100vh)      │─────────────────│
+│                 │              │ PREPARE MY CARD │
+│       ↓         │              │ REVIEW RIGHTS   │
+└─────────────────┘              │ HELP COMMUNITY  │
+│ PREPARE...      │              │─────────────────│
+│ REVIEW...       │              │ Tips section    │
+│ HELP...         │              │ Hotline         │
+└─────────────────┘              └─────────────────┘
 ```
 
-### Hero Section
-- Full viewport height (`min-h-screen`)
-- Centered "STAY" and "READY" stacked vertically
-- Giant scale (`headline-hero` class)
-- Line-height ~0.85 for tight stacking
-- Subtle scroll indicator (optional small "↓" or just natural scroll)
+Changes:
+- Remove `min-h-screen` from hero section
+- Add padding (`py-16` or `py-20`) instead — keeps drama without the scroll
+- Remove scroll indicator (ChevronDown)
+- Keep stacked headline but at slightly smaller scale for mobile context
 
-### Three Paths Section
-- Three `FocusFrameCard` components stacked
-- Equal visual weight
-- 16-24px gap between cards
-- Subheads are contextual hints:
-  - "Lock screen ready"
-  - "Door / Car / Street / Work"
-  - "Witness / Support / Prepare"
+### Fix 2: Tighten Content Page Spacing
 
-### Tips Section (Secondary)
-- Thin horizontal rule above
-- "STAY READY TIPS" in small caps (text-xs uppercase tracking-widest)
-- Tip previews as inline text with middle dots (·)
-- "All tips →" as simple underlined link
+**File:** `src/index.css`
 
-### Hotline Footer
-- Thin horizontal rules above and below
-- "If you need help now:" label
-- "UNITED WE DREAM HOTLINE" heading
-- Phone number in RED (the ONLY red in app)
-- "24/7 — Free — Confidential"
-- Keep vCard download button
+Reduce spacing in the `.info-content` and related classes:
 
----
-
-## Part 4: Section Index Pages (Menu Pages)
-
-**Files to update:**
-- `src/pages/ReviewRights.tsx`
-- `src/pages/HelpCommunity.tsx`
-- `src/pages/StayReadyTips.tsx`
-
-### New Layout Structure
-
-```text
-← Back
-
-REVIEW
-MY RIGHTS
-─────────────────────────────────
-
-┌                              ┐
-  AT YOUR DOOR              →
-└                              ┘
-
-┌                              ┐
-  IN YOUR CAR               →
-└                              ┘
-
-┌                              ┐
-  ON THE STREET             →
-└                              ┘
-
-... etc
-```
-
-### Key Changes
-- Page title is STACKED and HUGE (split multi-word titles)
-- Thin horizontal rule below title
-- Replace `.menu-item` links with `FocusFrameCard` components
-- Update section labels to be shorter/punchier:
-  - "ICE at Your Door" → "AT YOUR DOOR"
-  - "Stopped in Your Car" → "IN YOUR CAR"
-  - etc.
-
----
-
-## Part 5: Content Page Layout Redesign
+| Element | Current | Updated |
+|---------|---------|---------|
+| `.info-content` container | `space-y-6` (24px) | `space-y-4` (16px) |
+| `.info-content h2` | `mt-8` (32px) | `mt-6` (24px) |
+| `.info-content p` | `mb-4` (16px) | `mb-3` (12px) |
+| `.info-content ul` | `space-y-3 mb-6` | `space-y-2 mb-4` |
+| `.info-content section` | `mb-8` (32px) | `mb-6` (24px) |
+| `.section-divider` | `my-8` (32px) | `my-4` (16px) |
+| `.section-header` | `my-6` (24px) | `my-4` (16px) |
+| `.phrase-box` | `my-6 p-6` (24px) | `my-4 p-4` (16px) |
+| `.warning-box` | `my-6 p-4` | `my-3 p-3` |
 
 **File:** `src/components/InfoPageLayout.tsx`
 
-### Header Updates
-```text
-← Review My Rights
+- Change `space-y-6` to `space-y-4` on the content wrapper
+- Change `mb-8` to `mb-4` after section divider
 
-AT YOUR
-DOOR
+### Fix 3: Individual Content Pages
 
-When ICE or police knock on your home.
-```
-
-- Parent section as back link text
-- Title stacked and huge
-- Subtitle in regular weight, smaller, provides context
-
-### Section Structure
-```text
-─────────────────────────────────
-YOUR RIGHTS
-─────────────────────────────────
-
-Content here...
-
-─────────────────────────────────
-WHAT TO SAY
-─────────────────────────────────
-
-Content here...
-```
-
-- Thin rules above and below section headers
-- Section headers in uppercase, tracking-widest
-
----
-
-## Part 6: Phrase Callout Boxes (Critical Change)
-
-**File:** `src/index.css` + content pages
-
-### Current Style (Minimal)
-```text
-│ What to say:
-│ "I am exercising my right to remain silent."
-```
-
-### New Style (Prominent Pull Quote)
-```text
-┌──────────────────────────────────────────┐
-│                                          │
-│  "I do not consent to your              │
-│   entry. Please slide any               │
-│   warrant under the door."              │
-│                                          │
-└──────────────────────────────────────────┘
-```
-
-### CSS Implementation
-```css
-.phrase-box {
-  @apply border-2 border-foreground p-6 my-6;
-}
-
-.phrase-box p {
-  @apply text-lg leading-relaxed font-medium;
-  font-size: clamp(1.125rem, 4vw, 1.5rem);
-}
-
-.phrase-box-label {
-  @apply text-xs font-bold uppercase tracking-widest mb-4 text-muted-foreground;
-}
-```
-
-### Warning Box Style
-```css
-.warning-box {
-  @apply border border-foreground p-4 my-6 relative;
-}
-
-.warning-box::before {
-  content: '⚠';
-  @apply absolute -top-3 left-4 bg-background px-2 text-sm;
-}
-```
-
----
-
-## Part 7: Card Builder Flow Updates
+Update spacing in pages that override defaults:
 
 **Files to update:**
-- `src/pages/PrepareCard.tsx`
-- `src/components/StatusSelector.tsx`
-- `src/types/card.ts`
+- `src/pages/rights/IceAtDoor.tsx`
+- `src/pages/rights/UniversalRights.tsx`
+- `src/pages/community/GoodWitness.tsx`
 
-### Status Screen Layout
-```text
-PREPARE
-MY CARD
-
-● ○ ○
-
-We'll customize your card based on
-your immigration status.
-
-┌                              ┐
-  U.S. CITIZEN
-└                              ┘
-
-┌                              ┐
-  GREEN CARD HOLDER
-└                              ┘
-
-... etc (as FocusFrameCards)
-```
-
-### Remove "Undocumented" Option
-From `src/types/card.ts`:
-- Remove `'undocumented'` from `ImmigrationStatus` type
-- Remove from `statusLabels` object
-- Remove from `statusGuidance` object
-
-From `src/components/StatusSelector.tsx`:
-- Remove the undocumented option from array
-- Update component to use FocusFrameCard style
-
-### Final Card Screen Layout
-```text
-YOUR CARD
-IS READY
-
-[Card preview - phone mockup]
-
-This fits your lock screen.
-─────────────────────────────────
-
-┌                              ┐
-  SAVE TO PHOTOS            ↓
-└                              ┘
-
-┌                              ┐
-  DOWNLOAD AUDIO            ↓
-└                              ┘
-
-─────────────────────────────────
-
-HOW TO SET AS LOCK SCREEN
-
-iPhone
-Settings → Wallpaper → Add New →
-Choose from Photos → Select your card
-
-Android
-Long press home screen → Wallpaper →
-My photos → Select your card
-
-─────────────────────────────────
-
-Want hands-free playback?
-Set up audio shortcuts →
-```
+Changes per file:
+- Reduce `mb-8` to `mb-6` on intro text
+- Reduce `my-6` to `my-4` on section headers
+- Reduce `space-y-3` to `space-y-2` on lists
 
 ---
 
-## Part 8: Page Transitions
+## Visual Comparison
 
-**File:** `src/App.tsx` or new transition wrapper component
-
-### Implementation Options
-
-**Option A: Framer Motion (if added)**
-```tsx
-<motion.div
-  initial={{ x: '100%' }}
-  animate={{ x: 0 }}
-  exit={{ x: '-100%' }}
-  transition={{ duration: 0.25, ease: 'easeOut' }}
->
+### Content Page - Before
+```text
+┌─────────────────────┐
+│ ← Back      [Home]  │
+│                     │
+│ AT YOUR             │
+│ DOOR                │
+│                     │  ← 32px gap
+│ ─────────────────── │
+│                     │  ← 32px gap
+│ ─ YOUR RIGHTS ───── │
+│                     │  ← 24px gap
+│ You are not...      │
+│                     │  ← 16px gap
+│ You do NOT have...  │
+│                     │  ← 24px gap
+│ ─ WHAT TO SAY ───── │
+│                     │  ← 24px gap
+│ ┌─────────────────┐ │
+│ │ SAY THIS        │ │
+│ │ "I do not..."   │ │  ← 24px padding
+│ └─────────────────┘ │
+│                     │  ← 24px gap
 ```
 
-**Option B: CSS-only with route change detection**
-Add slide animation keyframes:
-```css
-@keyframes slide-in-right {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes slide-out-left {
-  from { transform: translateX(0); opacity: 1; }
-  to { transform: translateX(-20%); opacity: 0; }
-}
-
-.page-enter {
-  animation: slide-in-right 250ms ease-out;
-}
+### Content Page - After
+```text
+┌─────────────────────┐
+│ ← Back      [Home]  │
+│ AT YOUR             │
+│ DOOR                │
+│ ─────────────────── │  ← 16px gap
+│ ─ YOUR RIGHTS ───── │  ← 16px gap
+│ You are not...      │
+│ You do NOT have...  │  ← 12px gap
+│ ─ WHAT TO SAY ───── │  ← 16px gap
+│ ┌─────────────────┐ │
+│ │ SAY THIS        │ │
+│ │ "I do not..."   │ │  ← 16px padding
+│ └─────────────────┘ │  ← 16px gap
+│ ┌─────────────────┐ │
+│ │ SAY THIS        │ │
+│ │ "I am exercis..."│ │
+│ └─────────────────┘ │
 ```
 
-Apply to main content wrapper on route change.
+Content feels tighter, more intentional, less like a template.
 
 ---
 
-## File Summary
+## Files to Modify
 
-### Files to Create
-| File | Purpose |
-|------|---------|
-| `src/components/FocusFrameCard.tsx` | Reusable corner-bracket card with tap animation |
-| `src/components/PageTransition.tsx` | Optional: Wrapper for slide transitions |
-
-### Files to Modify
 | File | Changes |
 |------|---------|
-| `src/index.css` | Paper texture, typography utilities, phrase boxes, animations |
-| `tailwind.config.ts` | Add new animation keyframes |
-| `src/pages/Index.tsx` | Complete homepage redesign with hero + three paths |
-| `src/pages/ReviewRights.tsx` | Stacked title, FocusFrameCard navigation |
-| `src/pages/HelpCommunity.tsx` | Stacked title, FocusFrameCard navigation |
-| `src/pages/StayReadyTips.tsx` | Stacked title, FocusFrameCard navigation |
-| `src/components/InfoPageLayout.tsx` | Stacked title, section dividers |
-| `src/components/StatusSelector.tsx` | FocusFrameCard style, remove "Undocumented" |
-| `src/types/card.ts` | Remove "undocumented" from types |
-| `src/pages/PrepareCard.tsx` | Updated layout with stacked title, FocusFrameCards |
-| `src/pages/rights/IceAtDoor.tsx` | New phrase-box styling for "What to say" |
-| `src/pages/rights/UniversalRights.tsx` | New phrase-box styling |
-| (All other content pages) | Update callout styling |
+| `src/pages/Index.tsx` | Remove `min-h-screen` hero, reduce to `py-16`/`py-20` |
+| `src/index.css` | Tighten spacing across all content utilities |
+| `src/components/InfoPageLayout.tsx` | Reduce `space-y-6` to `space-y-4`, reduce divider margin |
+| `src/pages/rights/IceAtDoor.tsx` | Reduce section header margins |
+| `src/pages/rights/UniversalRights.tsx` | Reduce intro and section margins |
+| `src/pages/community/GoodWitness.tsx` | Reduce list and section spacing |
 
 ---
 
-## Implementation Order
+## Technical Details
 
-**Phase 1: Core Design System**
-1. Update `src/index.css` with new typography, texture, and component styles
-2. Update `tailwind.config.ts` with animations
-3. Create `FocusFrameCard.tsx` component
+### Homepage Hero Height Options
+The current `min-h-screen` can be replaced with:
+- `py-16` (64px top/bottom) — compact but still impactful
+- `py-20` (80px) — slightly more breathing room
+- `pt-12 pb-16` — asymmetric for visual interest
 
-**Phase 2: Homepage**
-4. Redesign `src/pages/Index.tsx` with hero and three paths
+The headline scale is already responsive via `clamp()`, so reducing container height won't break the typography.
 
-**Phase 3: Section Index Pages**
-5. Update `ReviewRights.tsx`
-6. Update `HelpCommunity.tsx`
-7. Update `StayReadyTips.tsx`
+### Content Spacing Philosophy
+The tighter spacing follows newspaper/magazine conventions:
+- Body text: ~12px paragraph spacing (not 16px)
+- Section breaks: 16-24px (not 32px)
+- Pull quotes/callouts: 16px margins (not 24px)
 
-**Phase 4: Content Page Layout**
-8. Update `InfoPageLayout.tsx`
-9. Update phrase callout styling across all content pages
-
-**Phase 5: Card Builder Flow**
-10. Update types to remove "undocumented"
-11. Update `StatusSelector.tsx`
-12. Update `PrepareCard.tsx`
-
-**Phase 6: Polish**
-13. Add page transitions
-14. Test all tap interactions on mobile
-15. Verify typography scales across devices
-
----
-
-## Technical Notes
-
-- **Focus Frame tap animation**: Uses `:active` pseudo-class for mobile touch feedback. The corner brackets are `<span>` elements with borders that animate from fixed size to full container size.
-
-- **Typography scaling**: Uses `clamp()` for fluid typography that works across all viewport sizes without breakpoints.
-
-- **Paper texture**: SVG filter-based noise at very low opacity (0.03) for subtle texture without performance impact.
-
-- **Page transitions**: Can be implemented with CSS animations triggered by route changes, or with Framer Motion if we want more control. CSS-only is lighter weight.
-
-- **"Undocumented" removal**: This is intentional — the prompt specifies using "Prefer not to say" which generates a universal rights card without requiring disclosure of sensitive status.
-
-- **Red accent (#C41E3A)**: Used ONLY for the hotline phone number. This creates maximum visual contrast for the emergency element.
+This creates rhythm without the "padded template" feel.
 
