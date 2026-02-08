@@ -1,124 +1,103 @@
 
-# Fix: Emergency Contact Not Appearing on Card
+# Fix Duplicate Headers & Strengthen Section Headers
 
-## Problem
+## Summary
 
-When users fill in emergency contact fields but click "Next" or "Skip" without clicking "Add Contact", the contact data is lost. The card generates with an empty contacts array.
-
-## Solution
-
-Auto-save any pending contact data when the user navigates away from the contacts step.
+Two issues to fix:
+1. **Duplicate headers** on PrepareCard steps - both the page AND the form show redundant titles
+2. **Weak section headers** in info pages - "During the Arrest" etc. don't stand out enough for mobile scanning
 
 ---
 
-## Changes
+## Issue 1: Duplicate Headers
 
-### `src/pages/PrepareCard.tsx`
+### Current Problem
 
-**1. Add a ref to access the EmergencyContactForm's pending data**
-
-Create a mechanism to capture pending (unsaved) contact data when the user proceeds to the next step.
-
-**2. Modify the `goNext` function to auto-add pending contacts**
-
-Before navigating away from the contacts step, check if there's valid data in the input fields and add it automatically.
-
-**Implementation approach:**
-
-Option A - Lift the pending state up to PrepareCard:
-- Move `newName` and `newPhone` state from EmergencyContactForm to PrepareCard
-- Pass them as props to the form
-- In `goNext()`, check if there's pending contact data and add it before proceeding
-
-Option B - Use a callback prop (cleaner):
-- Add an `onPendingContact` callback to EmergencyContactForm
-- When fields change, call this callback with the current field values
-- In `goNext()`, use the pending values to auto-add before proceeding
-
-I recommend **Option A** for simplicity.
-
----
-
-## File Changes
-
-### `src/pages/PrepareCard.tsx`
-
-```tsx
-// Add state for pending contact fields
-const [pendingContactName, setPendingContactName] = useState('');
-const [pendingContactPhone, setPendingContactPhone] = useState('');
-
-// Modify goNext to auto-save pending contact
-const goNext = () => {
-  // If on contacts step and there's pending data, auto-add it
-  if (step === 'contacts' && pendingContactName.trim() && pendingContactPhone.trim()) {
-    const newContact: EmergencyContact = {
-      id: Date.now().toString(),
-      name: pendingContactName.trim(),
-      phone: formatPhoneDisplay(pendingContactPhone.trim()),
-    };
-    setContacts([...contacts, newContact]);
-    setPendingContactName('');
-    setPendingContactPhone('');
-  }
-  
-  const nextIndex = currentStepIndex + 1;
-  if (nextIndex < steps.length) {
-    setStep(steps[nextIndex]);
-  }
-};
-
-// Pass pending state to EmergencyContactForm
-<EmergencyContactForm 
-  contacts={contacts} 
-  onChange={setContacts}
-  pendingName={pendingContactName}
-  onPendingNameChange={setPendingContactName}
-  pendingPhone={pendingContactPhone}
-  onPendingPhoneChange={setPendingContactPhone}
-/>
+On the "Document Info" step:
+```text
+┌─────────────────────────────┐
+│      DOCUMENT              │ ← Page title (PrepareCard.tsx)
+│        INFO                │
+│                            │
+│      Document Type         │ ← Form title (DocumentForm.tsx) - DUPLICATE!
+│  Select your ID type...    │
+└─────────────────────────────┘
 ```
 
-### `src/components/EmergencyContactForm.tsx`
+Same issue on "Emergency Contacts" step - the title appears twice.
 
-```tsx
-interface EmergencyContactFormProps {
-  contacts: EmergencyContact[];
-  onChange: (contacts: EmergencyContact[]) => void;
-  pendingName: string;
-  onPendingNameChange: (value: string) => void;
-  pendingPhone: string;
-  onPendingPhoneChange: (value: string) => void;
+### Fix
+
+Remove the internal `<h2>` headers from `DocumentForm.tsx` and `EmergencyContactForm.tsx` since the parent page already provides the section title.
+
+**Files to modify:**
+
+| File | Change |
+|------|--------|
+| `src/components/DocumentForm.tsx` | Remove lines 29-37 (h2 and two p tags) |
+| `src/components/EmergencyContactForm.tsx` | Remove lines 77-84 (h2 and two p tags) |
+
+The description text ("Select your ID type..." and "This will be added to your card...") can be moved to the parent if needed, or kept as a single intro line.
+
+---
+
+## Issue 2: Section Headers Need More Weight
+
+### Current Problem
+
+```text
+DURING THE ARREST          ← text-sm (14px), font-semibold, muted gray
+                              Hard to spot when scanning quickly on mobile
+```
+
+### Proposed Fix
+
+Make section headers more prominent while keeping them distinct from page titles:
+
+```text
+DURING THE ARREST          ← text-base (16px), font-bold, black text
+                              Clear section breaks, easier to scan
+```
+
+**CSS Change in `src/index.css`:**
+
+```css
+/* Current */
+.info-content h2 {
+  font-family: 'DM Sans', sans-serif;
+  @apply text-sm font-semibold uppercase tracking-widest mb-2 mt-4 first:mt-0;
+  color: hsl(var(--headline));
 }
 
-// Remove local newName/newPhone state
-// Use props instead:
-// - pendingName instead of newName
-// - onPendingNameChange instead of setNewName
-// - pendingPhone instead of newPhone  
-// - onPendingPhoneChange instead of setNewPhone
+/* Proposed */
+.info-content h2 {
+  font-family: 'DM Sans', sans-serif;
+  @apply text-base font-bold uppercase tracking-wider mb-2 mt-6 first:mt-0;
+  color: hsl(var(--headline));
+}
 ```
+
+Changes:
+- `text-sm` → `text-base` (14px → 16px)
+- `font-semibold` → `font-bold` (600 → 700)
+- `tracking-widest` → `tracking-wider` (slightly tighter letter spacing)
+- `mt-4` → `mt-6` (more breathing room above sections)
 
 ---
 
-## Helper Function
+## Visual Comparison
 
-Move `formatPhoneDisplay` to a shared location or duplicate in PrepareCard:
+### Section Headers - Before vs After
 
-```tsx
-const formatPhoneDisplay = (phone: string): string => {
-  const digits = phone.replace(/\D/g, '');
-  if (digits.length === 10) {
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-  }
-  return phone;
-};
-
-const isValidPhone = (phone: string): boolean => {
-  const cleaned = phone.replace(/[^\d+]/g, '');
-  const digitCount = cleaned.replace(/\D/g, '').length;
-  return digitCount >= 10 && digitCount <= 15;
-};
+```text
+BEFORE:                              AFTER:
+┌────────────────────────┐           ┌────────────────────────┐
+│ during the arrest      │           │ DURING THE ARREST      │
+│ (small, gray-ish)      │           │ (larger, bold, black)  │
+│                        │           │                        │
+│ • Record from a safe   │           │ • Record from a safe   │
+│   distance             │           │   distance             │
+└────────────────────────┘           └────────────────────────┘
 ```
 
 ---
@@ -127,15 +106,13 @@ const isValidPhone = (phone: string): boolean => {
 
 | File | Changes |
 |------|---------|
-| `src/pages/PrepareCard.tsx` | Add pending contact state, auto-save logic in goNext |
-| `src/components/EmergencyContactForm.tsx` | Use controlled props instead of local state |
+| `src/components/DocumentForm.tsx` | Remove duplicate h2 and description paragraphs |
+| `src/components/EmergencyContactForm.tsx` | Remove duplicate h2 and description paragraphs |
+| `src/index.css` | Update `.info-content h2` to be bolder and larger |
 
 ---
 
 ## Result
 
-After this fix:
-1. User types name "Mom" and phone "555-123-4567"
-2. User clicks "Next" without clicking "Add Contact"
-3. System auto-adds the contact before proceeding
-4. Card generates with "Mom - (555) 123-4567" visible
+1. PrepareCard steps show clean single titles without duplication
+2. Info pages have scannable, bold section headers that guide users through content quickly on mobile
