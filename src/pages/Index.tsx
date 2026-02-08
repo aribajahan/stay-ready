@@ -28,7 +28,7 @@ export default function Index() {
       </section>
 
       {/* Three Paths Section */}
-      <section className="px-6 py-[24px]">
+      <section className="px-6 py-[15px]">
         <div className="max-w-md mx-auto space-y-4">
           <FocusFrameCard to="/prepare" headline="Prepare My Card" subhead="Save a rights card for your lock screen" />
           <FocusFrameCard to="/rights" headline="Review My Rights" subhead="Door / Car / Street / Work" />
@@ -37,7 +37,7 @@ export default function Index() {
       </section>
 
       {/* Tips Section - Secondary */}
-      <section className="px-6 border-t border-foreground/10 py-[24px]">
+      <section className="px-6 border-t border-foreground/10 py-[15px]">
         <div className="max-w-md mx-auto">
           <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground mb-3">
             Stay Ready Tips
@@ -52,29 +52,24 @@ export default function Index() {
       </section>
 
       {/* Hotline Footer */}
-      <footer className="px-6 border-t border-foreground/10 mt-auto py-[24px]">
+      <footer className="px-6 border-t border-foreground/10 mt-auto py-[15px]">
         <div className="max-w-md mx-auto text-center">
-          <p className="text-sm text-muted-foreground mb-4">
-            If you need help now:
-          </p>
+          <p className="text-sm text-muted-foreground mb-4">If you need help now, find your local hotline →</p>
           
           <h3 className="text-xs font-bold uppercase tracking-widest mb-2">
-            United We Dream Hotline
-          </h3>
+        </h3>
           
-          <a href="tel:1-844-363-1423" className="text-hotline font-bold text-2xl block mb-2">
-            1-844-363-1423
-          </a>
+          <a href="tel:1-844-363-1423" className="text-hotline font-bold block mb-2 text-lg">
+        </a>
           
           <p className="text-xs text-muted-foreground mb-4">
-            24/7 — Free — Confidential
-          </p>
+        </p>
           
           <button onClick={handleSaveContact} className="text-sm font-semibold underline underline-offset-4 decoration-1 hover:decoration-2 transition-all mb-8">
             Save to Contacts
           </button>
 
-          <div className="pt-6 border-t border-foreground/10 space-y-2">
+          <div className="pt-6 border-t border-foreground/10 space-y-2 py-0">
             <p className="text-xs text-muted-foreground">
               This is not legal advice.
             </p>
