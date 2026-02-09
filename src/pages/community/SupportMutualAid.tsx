@@ -1,5 +1,32 @@
 import { InfoPageLayout } from '@/components/InfoPageLayout';
 
+function ResourceLink({ 
+  href, 
+  name, 
+  description 
+}: { 
+  href: string; 
+  name: string; 
+  description?: string;
+}) {
+  return (
+    <a 
+      href={href} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="flex items-start gap-3 py-3 border-b border-border/50 hover:bg-accent/30 transition-colors -mx-2 px-2"
+    >
+      <span className="text-muted-foreground">→</span>
+      <div>
+        <span className="font-bold">{name}</span>
+        {description && (
+          <span className="text-muted-foreground"> — {description}</span>
+        )}
+      </div>
+    </a>
+  );
+}
+
 export default function SupportMutualAid() {
   return (
     <InfoPageLayout 
@@ -13,162 +40,83 @@ export default function SupportMutualAid() {
 
       <section>
         <h2>National Organizations</h2>
-        
-        <div className="mb-4">
-          <p className="font-bold">United We Dream</p>
-          <a 
+        <div className="space-y-0">
+          <ResourceLink 
             href="https://unitedwedream.org" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            unitedwedream.org
-          </a>
-          <p className="text-sm text-muted-foreground">Largest immigrant youth-led network</p>
-        </div>
-
-        <div className="mb-4">
-          <p className="font-bold">RAICES (Texas)</p>
-          <a 
+            name="United We Dream" 
+            description="Largest immigrant youth-led network" 
+          />
+          <ResourceLink 
             href="https://raicestexas.org" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            raicestexas.org
-          </a>
-          <p className="text-sm text-muted-foreground">Legal services and bond fund</p>
-        </div>
-
-        <div className="mb-4">
-          <p className="font-bold">Make the Road (NYC)</p>
-          <a 
+            name="RAICES" 
+            description="Legal services and bond fund" 
+          />
+          <ResourceLink 
             href="https://maketheroadny.org" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            maketheroadny.org
-          </a>
-          <p className="text-sm text-muted-foreground">Legal aid, community programs, advocacy</p>
-        </div>
-
-        <div className="mb-4">
-          <p className="font-bold">National Day Laborer Organizing Network</p>
-          <a 
+            name="Make the Road" 
+            description="Legal aid, community programs, advocacy" 
+          />
+          <ResourceLink 
             href="https://ndlon.org" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            ndlon.org
-          </a>
-          <p className="text-sm text-muted-foreground">Support for day laborers and migrants</p>
+            name="National Day Laborer Organizing Network" 
+            description="Support for day laborers and migrants" 
+          />
         </div>
       </section>
 
       <section>
         <h2>Minnesota</h2>
-        
-        <div className="mb-4">
-          <p className="font-bold">Minnesota Immigrant Rights Action Committee (MIRAC)</p>
-          <a 
+        <div className="space-y-0">
+          <ResourceLink 
             href="https://miracmn.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            miracmn.com
-          </a>
-          <p className="text-sm text-muted-foreground">Rapid response, resources, advocacy</p>
-        </div>
-
-        <div className="mb-4">
-          <p className="font-bold">Minnesota's Fund to Rebuild</p>
-          <a 
+            name="MIRAC" 
+            description="Rapid response, resources, advocacy" 
+          />
+          <ResourceLink 
             href="https://workingpartnerships.betterworld.org/campaigns/supportminnesotans" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            workingpartnerships.betterworld.org
-          </a>
-        </div>
-
-        <div className="mb-4">
-          <p className="font-bold">CLUES</p>
-          <a 
+            name="Minnesota's Fund to Rebuild" 
+            description="Emergency support for families" 
+          />
+          <ResourceLink 
             href="https://clues.org" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            clues.org
-          </a>
-          <p className="text-sm text-muted-foreground">Services for Latino communities</p>
+            name="CLUES" 
+            description="Services for Latino communities" 
+          />
         </div>
       </section>
 
       <section>
         <h2>Bond Funds</h2>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-muted-foreground mb-2">
           Help people get out of detention while they fight their case.
         </p>
-        
-        <div className="mb-4">
-          <p className="font-bold">National Bail Fund Network</p>
-          <a 
+        <div className="space-y-0">
+          <ResourceLink 
             href="https://communityjusticeexchange.org/nbfn-directory" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            communityjusticeexchange.org/nbfn-directory
-          </a>
-        </div>
-
-        <div className="mb-4">
-          <p className="font-bold">Envision Freedom Fund</p>
-          <a 
+            name="National Bail Fund Network" 
+          />
+          <ResourceLink 
             href="https://envisionfreedom.org" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            envisionfreedom.org
-          </a>
+            name="Envision Freedom Fund" 
+          />
         </div>
       </section>
 
       <section>
         <h2>Find Local Groups</h2>
-        <p className="text-sm text-muted-foreground mb-4">
+        <p className="text-sm text-muted-foreground mb-2">
           The best support is often local. Find groups near you:
         </p>
-        
-        <div className="mb-4">
-          <p className="font-bold">Mutual Aid Hub</p>
-          <a 
+        <div className="space-y-0">
+          <ResourceLink 
             href="https://mutualaidhub.org" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            mutualaidhub.org
-          </a>
-        </div>
-
-        <div className="mb-4">
-          <p className="font-bold">Win Without War Resource List</p>
-          <a 
+            name="Mutual Aid Hub" 
+          />
+          <ResourceLink 
             href="https://winwithoutwar.org/policy/immigration-mutual-aid" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-sm underline hover:text-muted-foreground transition-colors"
-          >
-            winwithoutwar.org/policy/immigration-mutual-aid
-          </a>
-          <p className="text-sm text-muted-foreground">Organized by state</p>
+            name="Win Without War Resource List" 
+            description="Organized by state" 
+          />
         </div>
       </section>
     </InfoPageLayout>
