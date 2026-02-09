@@ -147,9 +147,10 @@ export default function PrepareCard() {
             {/* Hidden card for image generation */}
             <div 
               style={{
-                position: 'absolute',
+                position: 'fixed',
                 left: '-9999px',
                 top: 0,
+                pointerEvents: 'none',
               }}
             >
               <RightsCard 
