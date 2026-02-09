@@ -1,81 +1,92 @@
 
-
-# Fix Excessive Scroll on "Your Card Is Ready" Page
+# Fix Double Lines on Index Pages
 
 ## Problem
 
-The "Your Card is Ready" step scrolls way beyond the visible content because of the **hidden RightsCard** used for image generation.
+The index pages (Review Rights, Help Community, Stay Ready Tips) show two horizontal lines at the top of the navigation:
 
-The hidden card has these styles:
-```tsx
-style={{
-  position: 'absolute',
-  left: '-9999px',
-  top: 0,
-}}
+```text
+REVIEW
+MY RIGHTS
+───────────────────  ← section-divider
+───────────────────  ← nav-list border-top
+Universal Rights  →
+At Your Door      →
 ```
 
-The RightsCard itself is **1080px wide × 2400px tall** (phone lock screen dimensions). While `left: -9999px` moves it off-screen horizontally, it still contributes to the document's vertical scroll height because:
+This happens because:
+1. The `.section-divider` component adds a horizontal line
+2. The `.nav-list` CSS class includes `border-top: 1px solid`
 
-1. `position: absolute` is relative to the nearest positioned ancestor (the content container)
-2. The 2400px height extends the scrollable area
+When placed back-to-back, they create a double line.
 
 ## Solution
 
-Add styles to properly contain the hidden card so it doesn't affect document flow:
+Remove the redundant `.section-divider` from these three index pages. The `.nav-list` already provides its own top border, so the divider is unnecessary.
+
+---
+
+## Files to Modify
+
+| File | Change |
+|------|--------|
+| `src/pages/ReviewRights.tsx` | Remove section-divider (lines 40-41) |
+| `src/pages/HelpCommunity.tsx` | Remove section-divider (lines 38-39) |
+| `src/pages/StayReadyTips.tsx` | Remove section-divider (lines 28-29) |
+
+---
+
+## Code Changes
+
+### ReviewRights.tsx
+
+**Before (lines 35-44):**
+```tsx
+<h1 className="headline-stacked headline-section mb-6">
+  <span className="block">Review</span>
+  <span className="block">My Rights</span>
+</h1>
+
+{/* Divider */}
+<div className="section-divider mb-8" />
+
+{/* Section list */}
+<nav className="nav-list">
+```
+
+**After:**
+```tsx
+<h1 className="headline-stacked headline-section mb-8">
+  <span className="block">Review</span>
+  <span className="block">My Rights</span>
+</h1>
+
+{/* Section list */}
+<nav className="nav-list">
+```
+
+Note: Changed `mb-6` to `mb-8` on the headline to maintain proper spacing after removing the divider.
+
+### HelpCommunity.tsx
+
+Same pattern — remove divider, adjust headline margin.
+
+### StayReadyTips.tsx
+
+Same pattern — remove the first divider only (lines 28-29). Keep the dividers between sections (lines 46 and 58) as those separate grouped content.
+
+---
+
+## Visual Result
 
 ```text
-Current:                          Fixed:
-┌─────────────────────────┐       ┌─────────────────────────┐
-│ Your Card Is Ready      │       │ Your Card Is Ready      │
-│ [phone mockup]          │       │ [phone mockup]          │
-│ Lock screen instructions│       │ Lock screen instructions│
-│ Next Steps nav          │       │ Next Steps nav          │
-├─────────────────────────┤       └─────────────────────────┘
-│                         │         ↑ Page ends here
-│ (2400px of empty scroll)│
-│                         │
-└─────────────────────────┘
+Before:                    After:
+REVIEW                     REVIEW
+MY RIGHTS                  MY RIGHTS
+────────────               ────────────
+────────────               Universal Rights  →
+Universal Rights  →        At Your Door      →
+At Your Door      →
 ```
 
-## Code Change
-
-**File: `src/pages/PrepareCard.tsx`**
-
-Update the hidden card container (lines 148-153) from:
-
-```tsx
-<div 
-  style={{
-    position: 'absolute',
-    left: '-9999px',
-    top: 0,
-  }}
->
-```
-
-To:
-
-```tsx
-<div 
-  style={{
-    position: 'fixed',
-    left: '-9999px',
-    top: 0,
-    pointerEvents: 'none',
-  }}
->
-```
-
-Using `position: fixed` removes the element entirely from the document flow, so its 2400px height won't create scroll. The `pointerEvents: none` ensures it never interferes with interactions.
-
-## Why This Works
-
-| Property | `absolute` | `fixed` |
-|----------|-----------|---------|
-| Positioned relative to | Nearest positioned ancestor | Viewport |
-| Affects document scroll | Yes (extends parent) | No |
-| Stays in place on scroll | No | Yes |
-
-Since we only use this element for generating an image with `html-to-image`, `position: fixed` works perfectly - the library captures the element regardless of its positioning.
-
+Single clean line separating headline from navigation.
