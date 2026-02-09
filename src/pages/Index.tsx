@@ -50,16 +50,18 @@ export default function Index() {
           </a>
           <p className="text-xs text-muted-foreground mb-4">United We Dream Hotline. 24/7 · Free · Confidential</p>
           
-          <Link to="/hotlines" className="text-sm font-medium underline underline-offset-4 hover:text-muted-foreground transition-colors block mb-6">
-            All hotlines & resources →
-          </Link>
-
           <div className="border-t border-foreground/10 pt-4 space-y-0.5">
             <p className="text-xs text-muted-foreground">This is not legal advice.</p>
             <PrivacyNotice />
-            <Link to="/about" className="text-xs text-muted-foreground underline hover:text-foreground transition-colors block pt-1">
-              About
-            </Link>
+            <div className="flex items-center justify-center gap-3 pt-1">
+              <Link to="/hotlines" className="text-xs text-muted-foreground underline hover:text-foreground transition-colors">
+                Hotlines & Resources
+              </Link>
+              <span className="text-xs text-muted-foreground">·</span>
+              <Link to="/about" className="text-xs text-muted-foreground underline hover:text-foreground transition-colors">
+                About
+              </Link>
+            </div>
           </div>
         </div>
       </footer>

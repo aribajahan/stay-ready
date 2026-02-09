@@ -30,6 +30,7 @@ import WitnessEncounter from "./pages/community/WitnessEncounter";
 import SomeoneDetained from "./pages/community/SomeoneDetained";
 import PrepareFamily from "./pages/community/PrepareFamily";
 import ShareSafely from "./pages/community/ShareSafely";
+import SupportMutualAid from "./pages/community/SupportMutualAid";
 
 // Tips pages
 import LockScreen from "./pages/tips/LockScreen";
@@ -78,6 +79,7 @@ const App = () => (
             <Route path="/community/detained" element={<SomeoneDetained />} />
             <Route path="/community/family" element={<PrepareFamily />} />
             <Route path="/community/share" element={<ShareSafely />} />
+            <Route path="/community/support" element={<SupportMutualAid />} />
             
             {/* Tips */}
             <Route path="/tips" element={<StayReadyTips />} />

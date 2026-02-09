@@ -9,6 +9,7 @@ const sections = [
   { key: 'detained', label: 'If Someone Is Detained', path: '/community/detained' },
   { key: 'family', label: 'Prepare Your Family', path: '/community/family' },
   { key: 'share', label: 'Share Safely', path: '/community/share' },
+  { key: 'support', label: 'Support & Mutual Aid', path: '/community/support' },
 ];
 
 export default function HelpCommunity() {
