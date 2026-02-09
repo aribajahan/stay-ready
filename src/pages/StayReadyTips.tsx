@@ -45,7 +45,7 @@ export default function StayReadyTips() {
               Practice
             </h2>
             <nav className="nav-list">
-              <NavListItem to="/tips/practice" label="Practice Saying Your Rights" />
+              <NavListItem to="/rights/practice" label="Practice Your Rights" />
               <NavListItem to="/tips/audio" label="One-Tap Audio Setup" />
             </nav>
           </section>

@@ -47,6 +47,12 @@ export default function ReviewRights() {
               />
             ))}
           </nav>
+          
+          {/* Practice section */}
+          <div className="section-divider my-6" />
+          <nav className="nav-list">
+            <NavListItem to="/rights/practice" label="Practice Your Rights" />
+          </nav>
         </div>
       </main>
 

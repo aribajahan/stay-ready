@@ -278,8 +278,8 @@ export default function PracticeRights() {
       <InfoPageLayout 
         title="Practice Your Rights" 
         subtitle="Words you've only read are hard to say when you're scared. Practice out loud so they come easier."
-        backTo="/tips"
-        backLabel="Tips"
+        backTo="/rights"
+        backLabel="Rights"
       >
         <p className="text-sm text-muted-foreground mb-6">Takes about 30 seconds.</p>
         
@@ -353,6 +353,16 @@ export default function PracticeRights() {
       {/* Playing / Countdown screens */}
       {(screen === 'playing' || screen === 'countdown') && (
         <>
+          {/* Back button to exit */}
+          <button
+            onClick={handleBackToLanding}
+            className="absolute top-6 left-6 flex items-center gap-1 text-sm opacity-70 hover:opacity-100 transition-opacity"
+            aria-label="Exit practice"
+          >
+            <ChevronLeft size={18} />
+            Exit
+          </button>
+          
           {/* Progress indicator */}
           <div className="absolute top-6 left-0 right-0 flex justify-center gap-2">
             {PRACTICE_DATA.phrases.map((_, i) => (
@@ -457,11 +467,11 @@ export default function PracticeRights() {
             </button>
             
             <Link
-              to="/tips"
+              to="/rights"
               className="flex items-center justify-center gap-1 py-3 text-sm opacity-70 hover:opacity-100 transition-opacity"
             >
               <ChevronLeft size={16} />
-              Back to Tips
+              Back to Rights
             </Link>
           </div>
         </div>
