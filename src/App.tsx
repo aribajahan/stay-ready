@@ -70,6 +70,7 @@ const App = () => (
             <Route path="/rights/detained" element={<IfDetained />} />
             <Route path="/rights/warrants" element={<Warrants />} />
             <Route path="/rights/recording" element={<RecordingReporting />} />
+            <Route path="/rights/practice" element={<PracticeRights />} />
             
             {/* Community */}
             <Route path="/community" element={<HelpCommunity />} />
@@ -87,7 +88,7 @@ const App = () => (
             <Route path="/tips/emergency-contacts" element={<EmergencyContacts />} />
             <Route path="/tips/memorize-number" element={<MemorizeNumber />} />
             <Route path="/tips/emergency-text" element={<EmergencyText />} />
-            <Route path="/tips/practice" element={<PracticeRights />} />
+            <Route path="/tips/practice" element={<PracticeRights />} /> {/* Keep old route for backwards compat */}
             <Route path="/tips/audio" element={<OneTapAudio />} />
             <Route path="/tips/location-sharing" element={<LocationSharing />} />
             <Route path="/tips/privacy" element={<PrivacySettings />} />
