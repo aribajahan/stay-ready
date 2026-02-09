@@ -19,7 +19,7 @@ export default function About() {
 
       <section>
         <p className="text-sm mb-2">
-          Stay Ready is a community tool — not a government website.
+          Stay Ready is a community tool, not a government website.
         </p>
         <p className="text-sm">
           We are not affiliated with ICE, the Department of Homeland Security, or any government agency.
