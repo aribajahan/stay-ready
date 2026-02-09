@@ -1,28 +1,60 @@
 
-# Fix Double Lines on Index Pages
 
-## Problem
+# Create "Stay Ready" Favicon
 
-The index pages (Review Rights, Help Community, Stay Ready Tips) show two horizontal lines at the top of the navigation:
+## Summary
 
+Create a favicon inspired by the "Stay Ready" stacked headline from the homepage, then apply it to the site.
+
+---
+
+## Design Approach
+
+Since favicons are small (32x32 or 16x16 pixels), the full "STAY READY" text won't be legible. Two options:
+
+### Option A: "SR" Monogram (Recommended)
+A bold, stacked "SR" that echoes the homepage lockup:
 ```text
-REVIEW
-MY RIGHTS
-───────────────────  ← section-divider
-───────────────────  ← nav-list border-top
-Universal Rights  →
-At Your Door      →
+┌────────┐
+│   S    │
+│   R    │
+└────────┘
 ```
+- Black background with cream/white "SR" letters
+- Anton-style bold uppercase
+- Matches the editorial brutalist aesthetic
 
-This happens because:
-1. The `.section-divider` component adds a horizontal line
-2. The `.nav-list` CSS class includes `border-top: 1px solid`
+### Option B: Stylized "S"
+A single bold "S" in the Anton style on black background.
 
-When placed back-to-back, they create a double line.
+---
 
-## Solution
+## Implementation
 
-Remove the redundant `.section-divider` from these three index pages. The `.nav-list` already provides its own top border, so the divider is unnecessary.
+### Step 1: Generate Favicon Image
+
+Use AI image generation to create a 512x512 PNG with:
+- Black (#1A1A1A) square background
+- Stacked "SR" in cream/white (#FAF9F6)
+- Bold, condensed sans-serif letters (Anton-style)
+- Tight vertical stacking matching the homepage lockup
+
+### Step 2: Save to Project
+
+Save the generated image to `public/favicon.png`
+
+### Step 3: Update index.html
+
+Replace the current favicon reference:
+
+```html
+<!-- Current -->
+<link rel="icon" href="/favicon.ico">
+
+<!-- New -->
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+```
 
 ---
 
@@ -30,63 +62,22 @@ Remove the redundant `.section-divider` from these three index pages. The `.nav-
 
 | File | Change |
 |------|--------|
-| `src/pages/ReviewRights.tsx` | Remove section-divider (lines 40-41) |
-| `src/pages/HelpCommunity.tsx` | Remove section-divider (lines 38-39) |
-| `src/pages/StayReadyTips.tsx` | Remove section-divider (lines 28-29) |
+| `public/favicon.png` | **NEW** - Generated SR monogram favicon |
+| `index.html` | Update favicon link to reference new PNG |
 
 ---
 
-## Code Changes
+## Visual Reference
 
-### ReviewRights.tsx
-
-**Before (lines 35-44):**
-```tsx
-<h1 className="headline-stacked headline-section mb-6">
-  <span className="block">Review</span>
-  <span className="block">My Rights</span>
-</h1>
-
-{/* Divider */}
-<div className="section-divider mb-8" />
-
-{/* Section list */}
-<nav className="nav-list">
-```
-
-**After:**
-```tsx
-<h1 className="headline-stacked headline-section mb-8">
-  <span className="block">Review</span>
-  <span className="block">My Rights</span>
-</h1>
-
-{/* Section list */}
-<nav className="nav-list">
-```
-
-Note: Changed `mb-6` to `mb-8` on the headline to maintain proper spacing after removing the divider.
-
-### HelpCommunity.tsx
-
-Same pattern — remove divider, adjust headline margin.
-
-### StayReadyTips.tsx
-
-Same pattern — remove the first divider only (lines 28-29). Keep the dividers between sections (lines 46 and 58) as those separate grouped content.
-
----
-
-## Visual Result
+The favicon will echo the homepage lockup:
 
 ```text
-Before:                    After:
-REVIEW                     REVIEW
-MY RIGHTS                  MY RIGHTS
-────────────               ────────────
-────────────               Universal Rights  →
-Universal Rights  →        At Your Door      →
-At Your Door      →
+Homepage:          Favicon:
+┌──────────────┐   ┌────┐
+│    STAY      │   │ S  │
+│    READY     │   │ R  │
+└──────────────┘   └────┘
 ```
 
-Single clean line separating headline from navigation.
+Same editorial brutalist energy, condensed for small display.
+
