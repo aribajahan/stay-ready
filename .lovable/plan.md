@@ -1,145 +1,100 @@
 
-# Multiple Updates: Homepage, Prepare Card, Share Safely, About Page, and Consistency Fixes
 
-## Summary of Changes
+# Compact Footer + Support & Mutual Aid Page
 
-This plan addresses all the requested updates across multiple files.
+## Summary
+
+Two changes:
+1. Make homepage footer more compact by placing "Hotlines & Resources" and "About" links side-by-side
+2. Create new "Support & Mutual Aid" page for the Help Your Community section
 
 ---
 
-## 1. Homepage Updates (`src/pages/Index.tsx`)
+## 1. Homepage Footer Layout (`src/pages/Index.tsx`)
 
-### Add "KNOW YOUR RIGHTS" Eyebrow
-Add back the small uppercase eyebrow label above the main headline.
-
-### Tighten Footer Line Height
-Reduce spacing in the footer section by:
-- Changing `space-y-2` to `space-y-1`
-- Reducing vertical padding
-
-**Before:**
+### Current Layout
 ```text
 This is not legal advice.
-
-[large gap]
-
-Privacy Notice
+[privacy notice]
+About
 ```
 
-**After:**
+### New Layout
+Put the two links on the same line with a separator:
+
 ```text
 This is not legal advice.
-Privacy Notice
+[privacy notice]
+Hotlines & Resources · About
 ```
 
-### Add About Link
-Add a link to the new About page in the footer.
+Wait - looking at the current code, "All hotlines & resources" is in a different section above (line 53-55), with the About link below in the disclaimer section. 
 
----
+Looking more carefully at the footer structure:
+- Lines 44-51: Hotline number block
+- Lines 53-55: "All hotlines & resources" link with `mb-6`
+- Lines 57-63: Disclaimer section with border-t
 
-## 2. Prepare Card Flow (`src/pages/PrepareCard.tsx`)
+To make it tighter, I'll move the hotlines link into the disclaimer section alongside About, allowing us to remove the `mb-6` spacing.
 
-### Fix Double Line at Top
-The issue is that both `StatusSelector` and the parent component have dividers. The StatusSelector has a `section-divider` at line 37. Need to review if the parent also adds a line.
-
-Looking at the code, the StatusSelector adds its own divider. The page headline doesn't add one. I'll verify the exact issue and remove any duplicate.
-
-### Add Home Button on Final "Card Is Ready" Step
-Add a Home button below "Start Over" to navigate back to homepage.
-
-### Fix Excessive Scroll on Final Step
-The `pb-32` (8rem padding-bottom) in the main content area plus the fixed footer causes excess scroll. Reduce to `pb-24` or add margin management.
-
----
-
-## 3. Simplify Document Options (`src/types/card.ts`)
-
-Remove options without useful numbers:
-- U.S. Passport Card (redundant)
-- Birth Certificate (no system number)
-- Passport (with visa) (confusing)
-
-**Updated options by status:**
-
-| Status | Options |
-|--------|---------|
-| U.S. Citizen | U.S. Passport, Naturalization Certificate, None |
-| Green Card | Green Card, None |
-| Visa | Visa / I-94, None |
-| DACA | DACA Approval Notice, Work Permit (EAD), None |
-| TPS | TPS Card, Work Permit (EAD), None |
-| Asylum | Asylum Receipt Notice, Work Permit (EAD), None |
-
-Also remove unused types from `DocumentType`:
-- `usPassportCard`
-- `birthCertificate`
-- `passportVisa`
-
----
-
-## 4. Prepare Family: Consistent List Markers (`src/pages/community/PrepareFamily.tsx`)
-
-Currently uses mixed markers:
-- Em dashes (`—`) for "Make Cards for Everyone"
-- Checkboxes (`☐`) for "Create a Family Plan"
-- Em dashes for "Talk to Your Kids"
-- Em dashes for "Keep Documents Safe"
-
-**Fix:** Keep checkboxes for the actionable checklist items, use em dashes consistently elsewhere.
-
----
-
-## 5. Share Safely Updates (`src/pages/community/ShareSafely.tsx`)
-
-### Update Share Link
-Change from `stayready.lovable.app` to `stayready.org`
-
-### Add Printable Resource Links
-Convert text to clickable links:
-- ACLU Know Your Rights → https://www.aclu.org/know-your-rights/page/2
-- ILRC Red Cards → https://www.ilrc.org/redcards  
-- Add NILC Know Your Rights → https://www.nilc.org/resources/everyone-has-certain-basic-rights/
-
----
-
-## 6. Fix Links Site-wide
-
-Change from showing name + URL to just linked text. Example:
-
-**Before:**
-```
-ACLU Know Your Rights
-https://www.aclu.org/know-your-rights/page/2
+**New footer structure:**
+```tsx
+<div className="border-t border-foreground/10 pt-4 space-y-0.5">
+  <p className="text-xs text-muted-foreground">This is not legal advice.</p>
+  <PrivacyNotice />
+  <div className="flex items-center justify-center gap-3 pt-1">
+    <Link to="/hotlines" className="text-xs text-muted-foreground underline hover:text-foreground transition-colors">
+      Hotlines & Resources
+    </Link>
+    <span className="text-xs text-muted-foreground">·</span>
+    <Link to="/about" className="text-xs text-muted-foreground underline hover:text-foreground transition-colors">
+      About
+    </Link>
+  </div>
+</div>
 ```
 
-**After:**
-```
-ACLU Know Your Rights ← (this is a clickable link)
-```
-
-Update in:
-- `src/pages/community/ShareSafely.tsx`
-- `src/pages/Hotlines.tsx` (Printable Rights Cards section)
+This removes the separate "All hotlines & resources" block and `mb-6`, making the footer significantly shorter.
 
 ---
 
-## 7. Create About Page (`src/pages/About.tsx`)
+## 2. Support & Mutual Aid Page
 
-New page with:
-- Standard InfoPageLayout
-- Stacked headline "ABOUT / STAY READY"
-- Sections with dividers:
-  1. Who built this (team of immigrant women)
-  2. What this is (community tool, not government)
-  3. Sources (ILRC, IDP, ACLU, NILC)
-  4. Legal disclaimer
-  5. Contact/feedback email
+### Add to Navigation (`src/pages/HelpCommunity.tsx`)
 
-### Add Route
-Add `/about` route in `src/App.tsx`
+Add new entry to the sections array:
 
-### Link from Homepage
-Add "About" link in footer of `src/pages/Index.tsx`
+```tsx
+{ key: 'support', label: 'Support & Mutual Aid', path: '/community/support' },
+```
+
+### Create New Page (`src/pages/community/SupportMutualAid.tsx`)
+
+Uses InfoPageLayout with organized sections for:
+- National Organizations (United We Dream, RAICES, Make the Road, NDLON)
+- Minnesota (MIRAC, Minnesota's Fund to Rebuild, CLUES)
+- Bond Funds (National Bail Fund Network, Envision Freedom Fund)
+- Find Local Groups (Mutual Aid Hub, Win Without War)
+
+**Styling pattern per organization:**
+```tsx
+<div className="mb-4">
+  <p className="font-bold">United We Dream</p>
+  <a href="https://unitedwedream.org" target="_blank" rel="noopener noreferrer" 
+     className="text-sm underline hover:text-muted-foreground transition-colors">
+    unitedwedream.org
+  </a>
+  <p className="text-sm text-muted-foreground">Largest immigrant youth-led network</p>
+</div>
+```
+
+### Add Route (`src/App.tsx`)
+
+```tsx
+import SupportMutualAid from "./pages/community/SupportMutualAid";
+// ...
+<Route path="/community/support" element={<SupportMutualAid />} />
+```
 
 ---
 
@@ -147,97 +102,31 @@ Add "About" link in footer of `src/pages/Index.tsx`
 
 | File | Changes |
 |------|---------|
-| `src/pages/Index.tsx` | Add "KNOW YOUR RIGHTS" eyebrow, tighten footer, add About link |
-| `src/pages/PrepareCard.tsx` | Fix double line, add Home button, reduce bottom padding |
-| `src/types/card.ts` | Remove unused document types, simplify options |
-| `src/pages/community/PrepareFamily.tsx` | Consistent list markers |
-| `src/pages/community/ShareSafely.tsx` | Update URL, add printable links |
-| `src/pages/Hotlines.tsx` | Add links to printable resources |
-| `src/pages/About.tsx` | **NEW FILE** - About page |
-| `src/App.tsx` | Add /about route |
+| `src/pages/Index.tsx` | Move hotlines link into footer disclaimer, make side-by-side with About |
+| `src/pages/HelpCommunity.tsx` | Add "Support & Mutual Aid" to sections array |
+| `src/pages/community/SupportMutualAid.tsx` | **NEW FILE** - Full page with all organizations |
+| `src/App.tsx` | Add route for `/community/support` |
 
 ---
 
-## Code Examples
+## Full Page Content
 
-### Homepage Footer (tightened)
-```tsx
-<div className="border-t border-foreground/10 pt-4 space-y-1">
-  <p className="text-xs text-muted-foreground">
-    This is not legal advice.
-  </p>
-  <PrivacyNotice />
-  <Link to="/about" className="text-xs text-muted-foreground underline hover:text-foreground transition-colors">
-    About
-  </Link>
-</div>
-```
+### National Organizations
+- **United We Dream** - unitedwedream.org - Largest immigrant youth-led network
+- **RAICES (Texas)** - raicestexas.org - Legal services and bond fund
+- **Make the Road (NYC)** - maketheroadny.org - Legal aid, community programs, advocacy
+- **National Day Laborer Organizing Network** - ndlon.org - Support for day laborers and migrants
 
-### Share Safely Printables (linked)
-```tsx
-<section>
-  <h2>Printable Resources</h2>
-  <ul className="list-none space-y-1 text-sm">
-    <li>— <a href="https://www.aclu.org/know-your-rights/page/2" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground">ACLU Know Your Rights</a></li>
-    <li>— <a href="https://www.ilrc.org/redcards" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground">ILRC Red Cards</a></li>
-    <li>— <a href="https://www.nilc.org/resources/everyone-has-certain-basic-rights/" target="_blank" rel="noopener noreferrer" className="underline hover:text-muted-foreground">NILC Know Your Rights</a></li>
-  </ul>
-</section>
-```
+### Minnesota
+- **Minnesota Immigrant Rights Action Committee (MIRAC)** - miracmn.com - Rapid response, resources, advocacy
+- **Minnesota's Fund to Rebuild** - workingpartnerships.betterworld.org/campaigns/supportminnesotans
+- **CLUES** - clues.org - Services for Latino communities
 
-### About Page Structure
-```tsx
-<InfoPageLayout 
-  title="About" 
-  subtitle="Stay Ready"
-  backTo="/"
-  backLabel="Home"
->
-  <section>
-    <p>This tool was built by a team of immigrant women in the United States.</p>
-    <p>We made this for our families, our neighbors, and our communities.</p>
-  </section>
-  
-  <section>
-    <p>Stay Ready is a community tool — not a government website.</p>
-    <p>We are not affiliated with ICE, the Department of Homeland Security, or any government agency.</p>
-  </section>
-  
-  <section>
-    <h2>Sources</h2>
-    <ul>
-      <li>— Immigrant Legal Resource Center (ILRC)</li>
-      <li>— Immigrant Defense Project (IDP)</li>
-      <li>— American Civil Liberties Union (ACLU)</li>
-      <li>— National Immigration Law Center (NILC)</li>
-    </ul>
-  </section>
-  
-  <section>
-    <p>This is not legal advice. For advice about your situation, talk to an immigration attorney.</p>
-  </section>
-  
-  <section>
-    <h2>Questions or Feedback?</h2>
-    <a href="mailto:hello@stayready.org">hello@stayready.org</a>
-  </section>
-</InfoPageLayout>
-```
+### Bond Funds
+- **National Bail Fund Network** - communityjusticeexchange.org/nbfn-directory
+- **Envision Freedom Fund** - envisionfreedom.org
 
----
+### Find Local Groups
+- **Mutual Aid Hub** - mutualaidhub.org
+- **Win Without War Resource List** - winwithoutwar.org/policy/immigration-mutual-aid (Organized by state)
 
-## Technical Notes
-
-### Double Line Investigation
-The StatusSelector component has:
-- Line 34: subtitle text with `mb-8`
-- Line 37: `<div className="section-divider mb-6" />`
-
-The parent PrepareCard on the status step only has:
-- Line 112-115: headline
-- Line 116: StatusSelector component
-
-No parent divider, so the double line may be from the StatusSelector's internal divider + the mb-8 appearing as extra space. Will remove or adjust the StatusSelector divider since the parent handles visual hierarchy.
-
-### Email Placeholder
-The About page uses `hello@stayready.org` as a placeholder. Update this to the actual email address.
