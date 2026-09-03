@@ -1,73 +1,31 @@
-# Welcome to your Lovable project
+# Stay Ready
 
-## Project info
+A web app that helps you prepare before an encounter with ICE or law enforcement, and know what your rights are during one.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+You fill in a short form and it generates a rights card you can save to your phone: your emergency contacts, the documents you want someone to be able to find, and a plain-language summary of what you are and aren't required to do. The card is meant to be screenshotted and kept offline, because the moment you need it is usually the moment you can't look something up.
 
-## How can I edit this code?
+## What's in it
 
-There are several ways of editing your application.
+- **Prepare a card** — emergency contacts, document checklist, immigration status selector, generated as an image you can save.
+- **Know your rights** — what you can say, what you don't have to answer, what a warrant has to have on it.
+- **Hotlines** — rapid response and legal support numbers.
+- **Community help** — where to find local support.
 
-**Use Lovable**
+Available in English, Spanish, Chinese, Korean, Hindi, and Bengali.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## Privacy
 
-Changes made via Lovable will be committed automatically to this repo.
+Nothing you enter is stored or transmitted. There is no backend, no database, and no analytics on the form. The card is generated in your browser and exists only on your device once you save it.
 
-**Use your preferred IDE**
+## Running it locally
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Built with React, TypeScript, Vite, and Tailwind. Initial scaffolding was generated with Lovable, which is why the early commits are authored by its bot.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Status
 
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Working prototype. Not legal advice — it summarizes rights that are publicly documented, and it can't account for your specific situation. Talk to a lawyer if you have one.
